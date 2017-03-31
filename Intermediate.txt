@@ -1,0 +1,17 @@
+0x1000           prog          start           1000               
+0x1000          CLOOP          +JSUB            589               
+0x1004                           LDA         LENGTH        .032026
+0x1007                          COMP             #0        .290000
+0x100a                           JEQ         ENDFIL        .332007
+0x100d                         +JSUB          WRREC      .4B10105D
+J          CLOOP         3F2FEC
+**Error^^:UnExpectedTokenException
+0x1011         ENDFIL            LDA            EOF               
+ENDFIL          LDA            EOF
+**Error^^:DuplicateLabelException
+0x1014           DDDD            LDA            EOF               
+0x1017            DAA            LDA            EOF               
+0x101a          Label            LDA            EOF               
+lann LA            EOF
+**Error^^:UnExpectedTokenException
+0x101d                           LDA            EOF               

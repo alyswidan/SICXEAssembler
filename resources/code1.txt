@@ -1,0 +1,18 @@
+                    prog start 1000
+                     CLOOP          +JSUB          589
+                            LDA         LENGTH        .032026
+                       COMP             #0         .290000
+
+
+                        JEQ         ENDFIL         .332007
+                     +JSUB          WRREC       .4B10105D
+                           J          CLOOP         3F2FEC
+                     ENDFIL            LDA            EOF
+
+           ENDFIL          LDA            EOF
+                              DDDD    LDA            EOF
+                                  DAA LDA            EOF
+                                  Label LDA            EOF
+                                  lann LA            EOF
+                                    LDA            EOF
+                     .da

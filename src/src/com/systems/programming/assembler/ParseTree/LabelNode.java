@@ -3,8 +3,6 @@ import com.systems.programming.assembler.DirectiveResolver;
 import com.systems.programming.assembler.Exceptions.UnExpectedTokenException;
 import com.systems.programming.assembler.OpTable;
 
-import java.util.Optional;
-
 /**
  * Created by ADMIN on 3/29/2017.
  */
@@ -13,7 +11,7 @@ public class LabelNode extends ParseNode {
     public ParseNode nextNode(String transitionRequest) throws UnExpectedTokenException {
         ParseNode next;
         //an instruction??
-        if(OpTable.getInstance().containsKey(transitionRequest))
+        if(OpTable.getInstance().isInstruction(transitionRequest))
         {
             //System.out.println(transitionRequest+" not instruction");
             next =  new InstructionNode();

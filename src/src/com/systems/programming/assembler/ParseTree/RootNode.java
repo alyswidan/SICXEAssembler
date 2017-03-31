@@ -12,7 +12,7 @@ public class RootNode extends ParseNode {
     public ParseNode nextNode(String token)  {
         ParseNode next;
         //an instruction??
-        if(OpTable.getInstance().containsKey(token))next =  new InstructionNode();
+        if(OpTable.getInstance().isInstruction(token))next =  new InstructionNode();
         //a directive??
         else if(DirectiveResolver.getInstance().isDirective(token))next =  new DirectiveNode();
         //a label??

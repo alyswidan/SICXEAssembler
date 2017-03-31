@@ -1,4 +1,6 @@
 package com.systems.programming.assembler;
+import com.systems.programming.assembler.Exceptions.UndefinedMnemonicException;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public class OpTable {
     private OpTable() {
     }
 
-    public boolean containsKey(String key) {
+    public boolean isInstruction(String key) {
         if(key.charAt(0)=='+')
             key = key.substring(1);
         return table.containsKey(key.toUpperCase());
