@@ -1,6 +1,10 @@
 package com.systems.programming.assembler.ParseTree;
 
+import com.systems.programming.assembler.Exceptions.AssemblerException;
 import com.systems.programming.assembler.Exceptions.UnExpectedTokenException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ADMIN on 3/29/2017.
@@ -31,18 +35,39 @@ import com.systems.programming.assembler.Exceptions.UnExpectedTokenException;
         * */
 public abstract class ParseNode {
 
-    private String state;
+    private Map<String,String> state;
 
-    public String getState() {
+    public Map<String,String> getState() {
         return state;
     }
 
-    public void setState(String state) {
-        //System.out.println("arrived at node with "+state+" type = "+this.getClass().getSimpleName());
-
+    public ParseNode() {
+        state = new HashMap<>(7);
+    }
+    public ParseNode(Map<String, String> state) {
         this.state = state;
     }
 
+    public void setState(Map<String,String> state) {
+        //System.out.println("arrived at node with "+state+" type = "+this.getClass().getSimpleName());
+        this.state = state;
+    }
+
+    public void addState (String key,String val) throws AssemblerException
+    {
+        state.put(key,val);
+    }
+
+    public String removeState(String key) {
+        return state.remove(key);
+    }
+
+    public String getState(String key)
+    {
+        return state.get(key);
+
+    }
+
     //leaf nodes return null as their next hence optional
-    public abstract ParseNode nextNode(String token) throws UnExpectedTokenException;
+    public abstract ParseNode nextNode(String token) throws AssemblerException;
 }
