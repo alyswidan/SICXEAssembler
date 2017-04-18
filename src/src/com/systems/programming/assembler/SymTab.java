@@ -1,6 +1,5 @@
 package com.systems.programming.assembler;
 
-import com.systems.programming.assembler.Exceptions.AssemblerException;
 import com.systems.programming.assembler.Exceptions.DuplicateLabelException;
 
 import java.util.HashMap;
@@ -11,15 +10,15 @@ import java.util.Map;
  */
 public class SymTab {
 
+    private static SymTab ourInstance = new SymTab();
     //made the address in the table map string to make it hexadecimal
     private Map<String, Integer> table = new HashMap<>();
-    private static SymTab ourInstance = new SymTab();
+
+    private SymTab() {
+    }
 
     public static SymTab getInstance() {
         return ourInstance;
-    }
-
-    private SymTab() {
     }
 
     public boolean containsKey(Object key) {
@@ -36,7 +35,7 @@ public class SymTab {
 
     public Integer put(String key, Integer value) throws DuplicateLabelException {
 
-        if(containsKey(key))throw new DuplicateLabelException();
+        if (containsKey(key)) throw new DuplicateLabelException();
         return table.put(key, value);
 
     }
@@ -45,10 +44,9 @@ public class SymTab {
         return table.remove(key);
     }
 
-    public Map<String,Integer> getTable() {
+    public Map<String, Integer> getTable() {
         return table;
     }
-
 
 
 }

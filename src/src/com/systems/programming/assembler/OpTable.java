@@ -1,8 +1,9 @@
 package com.systems.programming.assembler;
-import com.systems.programming.assembler.Exceptions.UndefinedMnemonicException;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,9 @@ public class OpTable {
     //mnemonic->{opcode,format}
     private Map<String, Entry> table = new HashMap<>();
 
+    private OpTable() {
+    }
+
     public static OpTable getInstance() {
         return ourInstance;
     }
@@ -23,11 +27,8 @@ public class OpTable {
         return table;
     }
 
-    private OpTable() {
-    }
-
     public boolean isInstruction(String key) {
-        if(key.charAt(0)=='+')
+        if (key.charAt(0) == '+')
             key = key.substring(1);
         return table.containsKey(key.toUpperCase());
     }
@@ -39,13 +40,13 @@ public class OpTable {
     //this returns the instruction format if it is a valid instruction else it returns -1
     public int getFormat(String mnemonic) {
         if (mnemonic.charAt(0) == '+') return 4;
-        if(table.containsKey(mnemonic))
+        if (table.containsKey(mnemonic))
             return table.get(mnemonic).format;
         else return -1;
     }
 
     public int getOperandCount(String mnemonic) {
-        if(mnemonic.charAt(0)=='+')mnemonic = mnemonic.substring(1);
+        if (mnemonic.charAt(0) == '+') mnemonic = mnemonic.substring(1);
         return table.get(mnemonic).operandCount;
     }
 
@@ -97,11 +98,11 @@ public class OpTable {
     }
 
     //used for testing only comment out when not testing this class individually
-  public static void main(String[] args) {
+  /*public static void main(String[] args) {
 
       OpTable.getInstance().init(new File("E:\\aly\\projects\\SICXE-Assembler\\SICXE-Assembler\\SICXE-BOMBA\\src\\instructionSet"));
       System.out.println(OpTable.getInstance());
       System.out.println(Arrays.toString("C'abcdads".split("'(.*?)'")));
-  }
+  }*/
 
 }

@@ -10,32 +10,33 @@ import java.util.regex.Pattern;
 public class DirectiveResolver {
     private static DirectiveResolver ourInstance = new DirectiveResolver();
 
-    private String directives [] = {"word","byte","resb","resw","base","start"};
-    public static DirectiveResolver getInstance() {
-        return ourInstance;
-    }
+    private String directives[] = {"word", "byte", "resb", "resw", "base", "start", "end"};
 
     private DirectiveResolver() {
     }
 
-    public boolean isDirective(String test)
-    {
-        return Arrays.stream(directives).anyMatch(elem->elem.equals(test));
+    public static DirectiveResolver getInstance() {
+        return ourInstance;
     }
-    public int getLength(String directive,String operand) {
 
-        int len=-2;
+    public boolean isDirective(String test) {
+        return Arrays.stream(directives).anyMatch(elem -> elem.equals(test));
+    }
+
+    public int getLength(String directive, String operand) {
+
+        int len = -2;
         switch (directive) {
             case "WORD":
-                len =  3;
+                len = 3;
             case "RESB":
-                len =  Integer.parseInt(operand);
+                len = Integer.parseInt(operand);
             case "RESW":
-                len =  Integer.parseInt(operand) * 3;
+                len = Integer.parseInt(operand) * 3;
             case "BYTE": {
                 try {
                     //try to parse as an integer
-                    len =  Integer.parseInt(operand);
+                    len = Integer.parseInt(operand);
                 }
                 //if this is not a valid integer try to parse as a literal
                 catch (NumberFormatException ex) {
@@ -56,8 +57,8 @@ public class DirectiveResolver {
                     * */
                     Matcher charMatcher = Pattern.compile("C'(.*)'$").matcher(operand);
                     //we then get group 1 since 0 is the whole string ie:C'dasdas'
-                    if(hexMatcher.find())len =  hexMatcher.group(1).length();
-                    else if(charMatcher.find())len = charMatcher.group(1).length();
+                    if (hexMatcher.find()) len = hexMatcher.group(1).length();
+                    else if (charMatcher.find()) len = charMatcher.group(1).length();
                 }
             }
         }

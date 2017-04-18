@@ -10,8 +10,7 @@ import java.util.Arrays;
  */
 public class Pass1 {
 
-
-    static int locationCounter = 0;
+    private static int locationCounter = 0;
 
     public static void main(String[] args) {
 
@@ -28,11 +27,11 @@ public class Pass1 {
             while ((line = sourceReader.readLine()) != null) {
 
                 try {
+                    LineParser.getInstance().setMod(1);
                     Line parsedLine = LineParser.getInstance().parse(line);
 
-
                     if (parsedLine.getMnemonic() != null && parsedLine.isStart()) {
-                        locationCounter = Integer.parseInt(parsedLine.getOperand(),16);
+                        locationCounter = Integer.parseInt(parsedLine.getOperand(), 16);
                         //write address in first column
                         intermediateFileWrite.printf("0x%03x", locationCounter);
                         //write the parsedLine
