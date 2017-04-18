@@ -12,7 +12,7 @@ public class DirectivesBSENode extends DirectiveArgNode {
     @Override
     public void addState(String key, String val) throws AssemblerException {
         if(key.equals("dirArg")) {
-            addState("dirArg0",getState("dirArg"));
+            addState("dirArg0",null);
         }
         removeState("dirArg");
     }
