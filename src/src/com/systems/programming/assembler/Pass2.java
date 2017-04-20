@@ -4,64 +4,87 @@ import com.systems.programming.assembler.Exceptions.AssemblerException;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Mohamed Mahmoud on 4/11/2017.
  */
 public class Pass2 {
 
-    static List<String> codeList = new ArrayList<>();
-    private static int byteCounter = 0;
-    private static int locationCounter = 0;
 
     public static void main(String[] args) {
+        Assembler.init();
 
-        File f = new File("./resources");
-        System.out.println(Arrays.toString(f.listFiles()));
-        SavedRegisters.getInstance().init(new File("./resources/SavedRegisters.txt"));
-        //System.out.println(OpTable.getInstance());
+        try (BufferedReader sourceReader = new BufferedReader(new FileReader("Intermediate.txt"));
+             PrintWriter HTMEWriter = new PrintWriter(new FileWriter("HTME Record.txt"))) {
 
-        try (BufferedReader sourceReader = new BufferedReader(new FileReader("./resources/code1.txt"));
-             PrintWriter HTMEFileWrite = new PrintWriter(new FileWriter("HTME Record.txt"));) {
+            LineParser.getInstance().setMode(LineParser.Mode.DEEP);
             String line;
 
-            HTMEFileWrite.printf("H_PROGRM_%s_%s", Line.getStart(), Line.getpLength());
+            List<Line> currentTRecord = new ArrayList<>();
             while ((line = sourceReader.readLine()) != null) {
+                Line parsedLine = LineParser.getInstance().parse(line);
+                if (parsedLine.isAssemblerExecutable()) {//is this an executable
+                    parsedLine.execute();//execute it
 
-                try {
-                    Line parsedLine = LineParser.getInstance().parse(line);
+                    if (parsedLine.isStart())//is it a start
+                        HTMEWriter.println(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
 
-                    if (!parsedLine.isEmpty()) {
-                        //write the parsedLine
-                        codeList.add(parsedLine.getObjcode());
-                        locationCounter += parsedLine.getLength();
-                    }
-                    System.out.println(Line.getStart());
+                    if (parsedLine.isEnd())//is it an end
+                        HTMEWriter.println(createERecord(parsedLine.getOperand()));
+                } else {
+                    if (parsedLine.getObjectCode().getOpcode() != null)/* if this is not a reserve*/ {
 
-                    for (int i=0;i<codeList.size();i++){
-                        if(byteCounter == 0){
-
+                        if (currentTRecord.size() + parsedLine.getObjectCode().getLength() <= 30)//if it fits in record
+                            currentTRecord.add(parsedLine);
+                        else//if it doesn't fit
+                        {
+                            HTMEWriter.println(createTRecord(currentTRecord));//print current record
+                            currentTRecord.add(parsedLine);
                         }
+                    } else {// if it is a reserve
+                        HTMEWriter.println(createTRecord(currentTRecord));
                     }
-
-                } catch (AssemblerException e) {
-                    /*HTMEFileWrite.println(line.trim());
-                    HTMEFileWrite.println("**Error^^:" + e.getClass().getSimpleName());*/
                 }
-
             }
-
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (AssemblerException e) {
+            e.printStackTrace();
         }
     }
 
-    public static int getLocationCounter() {
-        return locationCounter;
+    private static String createTRecord(List<Line> currentTRecord) {
+        if (currentTRecord.size() == 0)
+            return "";
+        String builder = "T" +
+                currentTRecord.get(0).getAddress() +//add the address
+                String.format("%02x",
+                                currentTRecord.stream()//get the stream
+                                .mapToInt(line -> line.getObjectCode().getLength())//map it to length of object code
+                                        .sum()) //sum all that up
+                +
+                        currentTRecord.stream()
+                        .map(line -> line.getObjectCode().toString())//map to object code strings
+                        .collect(Collectors.joining(""));//join those into one string
+        currentTRecord.clear();//clear the list
+        return builder;
+    }
+
+    private static String createHRecord(String label, String operand) {
+        int address = Integer.parseInt(operand, 16);
+        return "H" +
+                String.format("%6s", label) +
+                String.format("%06x", address) +
+                String.format("%06x", Assembler.getProgramLength());
+    }
+
+    private static String createERecord(String operand) {
+        int address = Integer.parseInt(operand, 16);
+        return "E" +
+                String.format("%06x", address);
     }
 }

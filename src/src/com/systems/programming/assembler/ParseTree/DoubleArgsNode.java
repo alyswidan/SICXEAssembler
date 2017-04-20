@@ -20,9 +20,9 @@ public class DoubleArgsNode extends ParseNode {
     public void addState(String key, String val) throws AssemblerException {
         if(key.equals("arg"))
         {
-            addState("arg1",key.split(",")[0]);
-            addState("arg2",key.split(",")[1]);
-            removeState("arg");
+            System.out.println(val);
+            addState("arg1",val.split(",")[0]);
+            addState("arg2",val.split(",")[1]);
         }
         else super.addState(key,val);
     }

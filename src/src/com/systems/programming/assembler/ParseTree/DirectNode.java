@@ -8,19 +8,24 @@ import com.systems.programming.assembler.Exceptions.AssemblerException;
 public class DirectNode extends SingleArgNode{
 
     private int flags;
-
-    public DirectNode() {
-              //neither imm nor indir                     //format                                        //indexed
-        flags = (1<<5) | (1<<4) | (getState("format").equals("3")?0:1) | ((getState("isIndexed").equals("true")?1:0)<<3);
-    }
+    public DirectNode() {}
 
     @Override
     public void addState(String key, String val) throws AssemblerException {
+
         if(key.equals("arg")) {
+            super.addState(key,val);
+            flags = (1<<5)
+                    | (1<<4)
+                    | (getState("format").equals("3")?0:1)
+                    | ((getState("isIndexed").equals("true")?1:0)<<3);
             addState("arg1",String.valueOf(getDisplacement()));
             addState("flags",String.valueOf(flags));
+            removeState("arg");
         }
-        removeState("arg");
+        else
+            super.addState(key,val);
+
     }
 
     @Override

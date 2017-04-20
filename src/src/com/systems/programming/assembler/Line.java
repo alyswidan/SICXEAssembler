@@ -2,17 +2,23 @@ package com.systems.programming.assembler;
 
 import com.systems.programming.assembler.Exceptions.UndefinedMnemonicException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by ADMIN on 3/30/2017.
  */
 public class Line {
     private static String start, pLength;
-    private String label, mnemonic, operand, comment, line, objcode;
+    private String label, mnemonic, operand, comment, line;
+    private ObjectCode objectCode;
+    private int address = -1;
+    private List<String> tokenList;
 
     public Line(String line) {
-        this.line = line;
+        this.line = line.trim();
     }
 
     public static String getStart() {
@@ -58,6 +64,20 @@ public class Line {
     }
 
     public String getComment() {
+
+        if (comment == null) {
+            if (isComment())
+                setComment(line);
+            else {
+                //split into tokens
+                String tokens[] = line.split("\\.");
+                //clean line after removing comment
+                line = tokens[0].trim();
+                //if there's a comment add it
+                if (tokens.length == 2) setComment("." + tokens[1]);
+            }
+        }
+
         return comment;
     }
 
@@ -65,15 +85,18 @@ public class Line {
         this.comment = comment.replaceAll("\\s", "");
     }
 
-    public String getObjcode() {
-        return objcode;
-    }
+    public List<String> getTokens() {
+        if (tokenList == null) {
+            tokenList = new ArrayList<>(Arrays.asList(line.split("\\s+")));
+            //this is needed while traversing the parse tree to detect extra arguments or missing arguments
+            tokenList.add("");
+        }
+        return tokenList;
 
-    public void setObjcode(String objcode) {
-        this.objcode = objcode;
     }
 
     public boolean isStart() {
+        System.out.println(mnemonic.equalsIgnoreCase("start"));
         if (mnemonic.equalsIgnoreCase("start"))
             start = this.getOperand();
         return mnemonic.equalsIgnoreCase("start");
@@ -87,6 +110,7 @@ public class Line {
 
     //classifies mnemonic and gets length of instruction
     public int getLength() throws UndefinedMnemonicException {
+        System.out.println(getMnemonic());
         int len = -1;
         if (OpTable.getInstance().isInstruction(getMnemonic()))
             len = OpTable.getInstance().getLength(getMnemonic());
@@ -96,8 +120,36 @@ public class Line {
         return len;
     }
 
+    public int getAddress()
+    {
+
+        if(address!=-1)return address;
+        else return Integer.parseInt(line.split("\\s+")[0].replace("0x",""),16);
+
+    }
+
+    public boolean isAssemblerExecutable()
+    {
+        return DirectiveResolver.getInstance().isDirective(mnemonic)
+                && DirectiveResolver.getInstance().isAssemblerExecutable(mnemonic);
+    }
+
+
+    public void execute() throws UndefinedMnemonicException {
+        DirectiveResolver.getInstance().executeDirective(mnemonic,operand);
+    }
+
     public static void setLength(String pLength) {
         Line.pLength = pLength;
+    }
+
+
+    public void setObjectCode(ObjectCode objectCode) {
+        this.objectCode = objectCode;
+    }
+
+    public ObjectCode getObjectCode() {
+        return objectCode;
     }
 
     @Override
@@ -110,4 +162,6 @@ public class Line {
                 forEach(token -> builder.append(String.format("%15s", token == null ? "" : token)));
         return builder.toString();
     }
+
+
 }

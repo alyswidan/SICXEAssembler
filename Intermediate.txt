@@ -1,17 +1,50 @@
-0x1000           prog          start           1000               
-0x1000          CLOOP          +JSUB            589               
-0x1004                           LDA         LENGTH        .032026
-0x1007                          COMP             #0        .290000
-0x100a                           JEQ         ENDFIL        .332007
-0x100d                         +JSUB          WRREC      .4B10105D
-J          CLOOP         3F2FEC
+0x0000         PALIND          START              0               
+0x0000          FIRST            LDB             #1               
+0x0003          CLOOP          +JSUB          RDREC               
+0x0007                           LDA         LENGTH               
+0x000a                          COMP             #0               
+0x000d                           JEQ          CLOOP               
+0x0010                           LDT        #LENGTH               
+0x0013                          SUBR            B,T               
+0x0015                         +JSUB         CMPREC               
+0x0019         LENGTH           RESW              1               
+.
+.SUBROUTINEREADRECORD
+.
+0x001c          RDREC          CLEAR              X               
+0x001e                         CLEAR              A               
+0x0020                         CLEAR              S               
+0x0022                          +LDT          #4096               
+0x0026          RLOOP             TD          INPUT               
+0x0029                           JEQ          RLOOP               
+0x002c                            RD          INPUT               
+0x002f                         COMPR            A,S               
+0x0031                           JEQ          EXIT1               
+0x0034                          STCH       BUFFER,X               
+0x0037                          TIXR              T               
+0x0039                           JLT          RLOOP               
+0x003c          EXIT1            STX         LENGTH               
+0x003f                          RSUB                              
+0x0042          INPUT           BYTE          X'F1'               
+.
+.SUBROUTINECOMPARERECORD
+.
+0x0043         CMPREC          CLEAR              A               
+0x0045                         COMPR            X,T               
+0x0047                           JEQ          EXIT2               
+0x004a                           JGT          EXIT2               
+0x004d                           LDA       BUFFER,X               
+LDS     BUFFER,T
 **Error^^:UnExpectedTokenException
-0x1011         ENDFIL            LDA            EOF               
-ENDFIL          LDA            EOF
-**Error^^:DuplicateLabelException
-0x1014           DDDD            LDA            EOF               
-0x1017            DAA            LDA            EOF               
-0x101a          Label            LDA            EOF               
-lann LA            EOF
-**Error^^:UnExpectedTokenException
-0x101d                           LDA            EOF               
+0x0050                          SUBR            B,T               
+0x0052                          ADDR            B,X               
+0x0054                         COMPR            A,S               
+0x0056                           JEQ         CMPREC               
+0x0059                           JLT          ERROR               
+0x005c                           JGT          ERROR               
+0x005f          EXIT2            LDA             #1               
+0x0062                           STA         RESULT               
+0x0065          ERROR           RSUB                              
+0x0068         RESULT           RESW              1               
+0x006b         BUFFER           RESB           4096               
+0x106b                           END          FIRST               

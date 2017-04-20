@@ -55,6 +55,7 @@ public abstract class ParseNode {
 
     public void addState (String key,String val) throws AssemblerException
     {
+        System.out.println("adding "+key +" = "+val+" to "+this.getClass().getSimpleName() );
         state.put(key,val);
     }
 

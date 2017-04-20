@@ -32,10 +32,6 @@ public class RootNode extends ParseNode {
             next.addState("label",token);
         }
 
-        if(getState("base")!=null)
-            next.addState("base",getState("base"));
-
-
         return next;
     }
 }

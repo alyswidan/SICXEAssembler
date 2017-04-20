@@ -12,19 +12,23 @@ public class LabelNode extends ParseNode {
 
     @Override
     public ParseNode nextNode(String transitionRequest) throws AssemblerException {
+        System.out.println("transitionRequest = " + transitionRequest+" is directive-> "+DirectiveResolver
+                                                                    .getInstance()
+                                                                    .isDirective(transitionRequest));
         ParseNode next;
         //an instruction??
         if (OpTable.getInstance().isInstruction(transitionRequest)) {
-            //System.out.println(transitionRequest+" not instruction");
             next = new InstructionNode(transitionRequest);
+            next.addState("instruction",transitionRequest);
         }
+
         //a directive??
-        else if (DirectiveResolver.getInstance().isDirective(transitionRequest))
+        else if (DirectiveResolver.getInstance().isDirective(transitionRequest)) {
             next = new DirectiveNode(transitionRequest);
-            // any thing else throw exception
+            next.addState("directive",transitionRequest);
+        }// any thing else throw exception
+
         else throw new UnExpectedTokenException();
-        next.addState("instruction",transitionRequest);
-        //wrap it in an optional
         return next;
     }
 }

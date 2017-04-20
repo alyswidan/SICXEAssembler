@@ -1,9 +1,17 @@
 ====================================
 |    Symbol    |   address         |
 ====================================
-|     CLOOP    |      1000         |
-|       DAA    |      1017         |
-|    ENDFIL    |      1011         |
-|     Label    |      101a         |
-|      DDDD    |      1014         |
+|     EXIT2    |        5f         |
+|     INPUT    |        42         |
+|     EXIT1    |        3c         |
+|    LENGTH    |        19         |
+|     FIRST    |         0         |
+|    BUFFER    |        6b         |
+|     RLOOP    |        26         |
+|     CLOOP    |         3         |
+|     ERROR    |        65         |
+|     RDREC    |        1c         |
+|    CMPREC    |        43         |
+|    RESULT    |        68         |
+|    PALIND    |         0         |
 ====================================
