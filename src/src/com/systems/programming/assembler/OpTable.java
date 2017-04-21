@@ -28,7 +28,7 @@ public class OpTable {
     }
 
     public boolean isInstruction(String key) {
-        System.out.println(key);
+
         if (key.charAt(0) == '+') key = key.substring(1);
         System.out.println(table.containsKey(key.toUpperCase()));
         return table.containsKey(key.toUpperCase());

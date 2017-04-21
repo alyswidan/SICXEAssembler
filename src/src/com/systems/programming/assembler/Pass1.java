@@ -12,7 +12,7 @@ public class Pass1 {
 
 
 
-    public static void main(String[] args) {
+    public static void execute() {
 
         Assembler.init();
         try (BufferedReader sourceReader = new BufferedReader(new FileReader("./resources/code1.txt"));
@@ -36,7 +36,7 @@ public class Pass1 {
 
                     else if (!parsedLine.isEmpty()) {
                         //write address in first column
-                        intermediateFileWrite.printf("0x%04x", Assembler.getLocationCounter());
+                        intermediateFileWrite.printf("%04x", Assembler.getLocationCounter());
                         //write the parsedLine
                         intermediateFileWrite.println(parsedLine);
                         Assembler.IncrementLocationCounterBy(parsedLine.getLength());

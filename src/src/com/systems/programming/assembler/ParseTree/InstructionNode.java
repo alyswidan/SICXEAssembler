@@ -10,28 +10,34 @@ import com.systems.programming.assembler.OpTable;
  */
 public class InstructionNode extends ParseNode {
 
-    public InstructionNode(String token) {}
+    public InstructionNode(String token) {
+    }
+
     @Override
     public ParseNode nextNode(String transitionRequest) throws AssemblerException {
-        ParseNode next;
+        ParseNode next = null;
         UnExpectedTokenException ex = new UnExpectedTokenException();
+        int format = OpTable.getInstance().getFormat(getState("instruction"));
+        int operandCount = OpTable.getInstance().getOperandCount(getState("instruction"));
         //how many arguments does this instruction need
-        switch (OpTable.getInstance().getOperandCount(getState("instruction"))) {
+        switch (operandCount) {
             case 0:
                 if (transitionRequest.matches("")) next = new TerminalNode();
                 else throw ex;
                 break;
             case 1:
                 if (transitionRequest.matches("([^,]+(,X)?)")) {
-                    if(LineParser.getInstance().getMode() == LineParser.Mode.SHALLOW)
-                        next = new SingleArgNode();
-                    else next = getNextState(transitionRequest);
+
+                        if (LineParser.getInstance().getMode() == LineParser.Mode.SHALLOW)
+                            next = new SingleArgNode();
+                        else if (format == 3 || format == 4)next = getNextState(transitionRequest);
+                        else if(format == 2)next =  new DoubleArgsNode();
                 } else
                     throw ex;
                 break;
             case 2:
                 if (transitionRequest.matches(".+,.+(,X)?"))
-                    if(LineParser.getInstance().getMode() == LineParser.Mode.SHALLOW)
+                    if (LineParser.getInstance().getMode() == LineParser.Mode.SHALLOW)
                         next = new SingleArgNode();
                     else
                         next = new DoubleArgsNode();
@@ -41,10 +47,8 @@ public class InstructionNode extends ParseNode {
             default:
                 next = null;
         }
-        if (next != null)
-        {
-            //if(transitionRequest.contains(",X"))
-              //  transitionRequest = transitionRequest.replace(",X","");
+        if (next != null) {
+
             next.addState("arg", transitionRequest);
         }
 

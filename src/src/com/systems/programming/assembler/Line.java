@@ -5,7 +5,7 @@ import com.systems.programming.assembler.Exceptions.UndefinedMnemonicException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by ADMIN on 3/30/2017.
@@ -19,14 +19,12 @@ public class Line {
 
     public Line(String line) {
         this.line = line.trim();
-    }
-
-    public static String getStart() {
-        return start;
-    }
-
-    public static String getpLength() {
-        return pLength;
+        setAddress();
+        if (address != -1) {
+            List<String> s = getTokens();
+            getTokens().remove(0);
+            this.line = s.stream().collect(Collectors.joining(""));
+        }
     }
 
     public boolean isEmpty() {
@@ -103,8 +101,6 @@ public class Line {
     }
 
     public boolean isEnd() {
-        if (mnemonic.equalsIgnoreCase("end"))
-            setLength(Integer.toString(Integer.parseInt(this.getOperand(), 16) - Integer.parseInt(start, 16)));
         return mnemonic.equalsIgnoreCase("end");
     }
 
@@ -120,36 +116,55 @@ public class Line {
         return len;
     }
 
-    public int getAddress()
-    {
-
-        if(address!=-1)return address;
-        else return Integer.parseInt(line.split("\\s+")[0].replace("0x",""),16);
-
-    }
-
-    public boolean isAssemblerExecutable()
-    {
-        return DirectiveResolver.getInstance().isDirective(mnemonic)
-                && DirectiveResolver.getInstance().isAssemblerExecutable(mnemonic);
-    }
-
-
-    public void execute() throws UndefinedMnemonicException {
-        DirectiveResolver.getInstance().executeDirective(mnemonic,operand);
-    }
-
     public static void setLength(String pLength) {
         Line.pLength = pLength;
     }
 
+    public int getAddress() {
+        return address;
+    }
 
-    public void setObjectCode(ObjectCode objectCode) {
-        this.objectCode = objectCode;
+    public void setAddress(int address) {
+        this.address = address;
+    }
+
+    public void setAddress() {
+        try {
+            address = Integer.parseInt(getTokens().get(0), 16);
+        } catch (NumberFormatException ex) {
+            address = -1;
+        }
+
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public boolean isAssemblerExecutable() {
+        return DirectiveResolver.getInstance().isDirective(mnemonic)
+                && DirectiveResolver.getInstance().isAssemblerExecutable(mnemonic);
+    }
+
+    public void execute() throws UndefinedMnemonicException {
+        DirectiveResolver.getInstance().executeDirective(mnemonic, operand);
+    }
+
+    public boolean hasOpCode() {
+        return !DirectiveResolver.getInstance().isAssemblerExecutable(mnemonic)
+                && !DirectiveResolver.getInstance().isAReserve(mnemonic);
     }
 
     public ObjectCode getObjectCode() {
         return objectCode;
+    }
+
+    public void setObjectCode(ObjectCode objectCode) {
+        this.objectCode = objectCode;
     }
 
     @Override

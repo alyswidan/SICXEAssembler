@@ -38,49 +38,69 @@ public class LineParser {
         //clear the path
         path.clear();
         List<String> tokenList = parsedLine.getTokens();
-        System.out.println("tokenList = " + tokenList);
-        int start = getMode().equals(Mode.SHALLOW)?0:1;
-        System.out.println("tokenList = " + tokenList);
         //start the journey to c1lassify the line components
         node = new RootNode();
-        node = getNextNode(node, tokenList.get(start));
-        System.out.println(node.getState());
+        node = getNextNode(node, tokenList.get(0));
 
         //let the line travel through the tree
-        for (int i = start+1; i < tokenList.size(); i++) {
+        for (int i = 1; i < tokenList.size(); i++) {
 
             node = getNextNode(node, tokenList.get(i));
         }
 
-        System.out.println("parsing using mode "+mode.toString());
         if(mode.equals(Mode.SHALLOW))
-            return parseMode1(parsedLine);
+            return shallowParse(parsedLine);
         else
-            return parseMode2(parsedLine);
+            return deepParse(parsedLine);
     }
 
-    private Line parseMode2(Line parsedLine)
+    private Line deepParse(Line parsedLine)
     {
-        System.out.println(parsedLine.getAddress());
+        System.out.println("-----"+parsedLine.getAddress());
+        ObjectCode code = new ObjectCode();
         path.forEach(n->{
-            System.out.println(n.getClass().getSimpleName()+"-->"+n.getState());
+
+            if (n instanceof LabelNode) parsedLine.setLabel(n.getState("label"));
+
+            if (n instanceof InstructionNode) {
+                code.setOpcode(n.getState("opcode"));
+                code.setLength(OpTable.getInstance().getFormat(n.getState("instruction")));
+            }
+            if (n instanceof SingleArgNode) {
+                code.setFlags(Integer.parseInt(n.getState("flags")));
+                code.setArg1(Integer.parseInt(n.getState("arg")));
+            }
+            if(n instanceof DoubleArgsNode)
+            {
+                code.setArg1(Integer.parseInt(n.getState("arg1")));
+                code.setArg2(Integer.parseInt(n.getState("arg2")));
+            }
+            if (n instanceof DirectiveNode)
+            {
+                System.out.println("dasdasdasdasdasfas");
+                parsedLine.setMnemonic(n.getState("directive"));
+                code.setDirective(true);
+            }
+            if(n instanceof DirectiveArgNode)
+            {
+                code.setOpcode(n.getState("objectCode"));
+            }
         });
+        parsedLine.setObjectCode(code);
         return parsedLine;
 
 
 
     }
-    private Line parseMode1(Line parsedLine) {
+    private Line shallowParse(Line parsedLine) {
 
         //traverse the path and get components into corresponding variables
         path.forEach((ParseNode n) ->
         {
-            System.out.println(n.getClass().getSimpleName());
             if (n instanceof LabelNode) parsedLine.setLabel(n.getState("label"));
             if (n instanceof InstructionNode) parsedLine.setMnemonic(n.getState("instruction"));
             if (n instanceof DirectiveNode) parsedLine.setMnemonic(n.getState("directive"));
             if (n instanceof SingleArgNode || n instanceof DoubleArgsNode) parsedLine.setOperand(n.getState("arg"));
-            System.out.println("parsedLine = " + parsedLine);
         });
 
         return parsedLine;
@@ -105,7 +125,6 @@ public class LineParser {
 
     public void setBase(int base) {
         this.base = base;
-        System.out.println("--------------->base = " + base);
     }
 
     public int getCurrentAddress() {

@@ -25,7 +25,6 @@ RLOOP    TD      INPUT
          JLT     RLOOP
 EXIT1    STX     LENGTH
          RSUB
-INPUT    BYTE    X'F1'
 .
 . SUBROUTINE COMPARE RECORD
 .
@@ -34,7 +33,7 @@ CMPREC   CLEAR   A
          JEQ     EXIT2
          JGT     EXIT2
          LDA     BUFFER,X
-         LDS     BUFFER,T
+         LDS     BUFFER,X
          SUBR    B,T
          ADDR    B,X
          COMPR   A,S

@@ -4,6 +4,7 @@ import com.systems.programming.assembler.Exceptions.AssemblerException;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 public class Pass2 {
 
 
-    public static void main(String[] args) {
+    public static void execute() {
         Assembler.init();
 
         try (BufferedReader sourceReader = new BufferedReader(new FileReader("Intermediate.txt"));
@@ -24,7 +25,10 @@ public class Pass2 {
 
             List<Line> currentTRecord = new ArrayList<>();
             while ((line = sourceReader.readLine()) != null) {
+                line = Arrays.stream(line.split("\\s+")).skip(1).collect(Collectors.joining("  "));
+                System.out.println(line);
                 Line parsedLine = LineParser.getInstance().parse(line);
+                parsedLine.setAddress();
                 if (parsedLine.isAssemblerExecutable()) {//is this an executable
                     parsedLine.execute();//execute it
 

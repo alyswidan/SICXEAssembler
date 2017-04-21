@@ -12,9 +12,6 @@ public class LabelNode extends ParseNode {
 
     @Override
     public ParseNode nextNode(String transitionRequest) throws AssemblerException {
-        System.out.println("transitionRequest = " + transitionRequest+" is directive-> "+DirectiveResolver
-                                                                    .getInstance()
-                                                                    .isDirective(transitionRequest));
         ParseNode next;
         //an instruction??
         if (OpTable.getInstance().isInstruction(transitionRequest)) {

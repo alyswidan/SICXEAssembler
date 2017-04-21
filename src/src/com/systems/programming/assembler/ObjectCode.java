@@ -9,13 +9,13 @@ public class ObjectCode {
 
     private int length, flags, arg1, arg2;
     private String opcode;
-
+    private boolean isDirective = false;
     public ObjectCode(String opcode) {
 
         System.out.println("setting the opcode to "+opcode);
         this.opcode = opcode;
-        this.length = opcode.length();
-        this.flags = 0;
+        this.length = -1;
+        this.flags = -1;
         this.arg1 = 0;
         this.arg2 = 0;
     }
@@ -62,33 +62,46 @@ public class ObjectCode {
         return length;
     }
 
+    public void setDirective(boolean directive) {
+        isDirective = directive;
+    }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-
-        if(flags==0 && arg1==0 && arg2 == 0)/*directive or format 1*/
+        System.out.println("flags = " + flags);
+        if(isDirective || length == 1)/*directive or format 1*/ {
+            System.out.println("format 1 or directive");
+            System.out.println(length);
             builder.append(opcode);
-        else if(flags==0)//format 2
-            builder.append(opcode).append(String.format("%02x",arg1)).append(String.format("%02x",arg1));
-        else
+        } else if(length==2)//format 2
         {
-            int code = Integer.parseInt(opcode,16);
+            System.out.println("format 2");
+            builder.append(Integer.toHexString(Integer.parseInt(opcode))).append(String.format("%01x", arg1)).append(String.format("%01x", arg2));
+        } else
+        {
+            int code = Integer.parseInt(getOpcode());
             code <<=4;
             code |= flags;
             if(length==3)
             {
+                System.out.println("format 3");
+                System.out.println(Integer.toBinaryString(code));
                 code<<=12;
+                arg1 &=0xfff;
                 code|=arg1;
                 builder.append(String.format("%06x",code));
             }
             else
             {
+                System.out.println("format 4");
+                arg1&=0xffffff;
                 code<<=20;
                 code|=arg1;
                 builder.append(String.format("%08x",code));
             }
         }
+        System.out.println("hhaha == "+builder.toString());
         return builder.toString();
     }
 }

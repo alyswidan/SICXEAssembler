@@ -12,18 +12,14 @@ public class IndirectNode extends SingleArgNode {
     public IndirectNode() {}
 
     @Override
-    public void addState(String key, String val) throws AssemblerException {
-        if(key.equals("arg")) {
-            super.addState(key,val);
-            flags = (1<<5)
+    public int getFlags() {
+        if(super.getFlags()==-1)
+        {
+            super.setFlags((1<<5)
                     | (getState("format").equals("3")?0:1)
-                    | ((getState("isIndexed").equals("true")?1:0)<<3);
-            addState("arg",val.replace("@", ""));
-            addState("arg1",String.valueOf(getDisplacement()));
-            addState("flags",String.valueOf(flags));
-            removeState("arg");
+                    | ((getState("isIndexed").equals("true")?1:0)<<3));
         }
-        super.addState(key,val);
+        return super.getFlags();
     }
 
     @Override

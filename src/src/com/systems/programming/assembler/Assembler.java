@@ -9,6 +9,21 @@ public class Assembler {
     private static int locationCounter;
     private static boolean isOptableInitiallized = false;
     private static int programLength;
+
+
+    public static void main(String[] args) {
+        init();
+        Pass1.execute();
+        System.out.println("pass1===============================================================================");
+        Pass2.execute();
+    }
+
+
+
+
+
+
+
     public static int getLocationCounter() {
         return locationCounter;
     }
@@ -28,6 +43,7 @@ public class Assembler {
     public static void setProgramLength(int programLength) {
         Assembler.programLength = programLength;
     }
+
 
     public static void init()
     {

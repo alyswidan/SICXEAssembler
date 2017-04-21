@@ -44,11 +44,16 @@ public class DirectiveResolver {
         return ourInstance;
     }
 
+    public boolean isAReserve(String s)
+    {
+        return s.equalsIgnoreCase("resw") || s.equalsIgnoreCase("resb");
+    }
     public boolean isDirective(String test) {
         return Arrays.stream(directives).anyMatch(elem -> elem.equalsIgnoreCase(test));
     }
 
     public boolean isAssemblerExecutable(String mnemonic) {
+        System.out.println("checking "+mnemonic);
         return Arrays.stream(hasNoObjectCode).anyMatch(x -> x.equalsIgnoreCase(mnemonic));
     }
 
@@ -83,6 +88,7 @@ public class DirectiveResolver {
 
     public ObjectCode parseByte(String operand) {
         ObjectCode objectCode = new ObjectCode();
+        objectCode.setDirective(true);
         try {
             //try to parse as an integer
             objectCode.setOpcode(String.format("%02x", Integer.parseInt(operand)));
@@ -108,12 +114,15 @@ public class DirectiveResolver {
             Matcher charMatcher = Pattern.compile("C'(.*)'$").matcher(operand);
             //we then get group 1 since 0 is the whole string ie:C'dasdas'
             if (hexMatcher.find()) {
+                System.out.println("hex");
                 objectCode.setOpcode(hexMatcher.group(1));
             } else if (charMatcher.find()) {
+                System.out.println("char");
                 StringBuilder builder = new StringBuilder();
                 charMatcher.group(1).chars().mapToObj(i -> String.format("%02x", i)).forEach(builder::append);
                 objectCode.setOpcode(builder.toString());
             }
+            System.out.println(objectCode.getOpcode());
             objectCode.setLength(objectCode.getOpcode().length()/2);
         }
         return objectCode;
