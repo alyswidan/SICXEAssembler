@@ -22,34 +22,44 @@ public class Pass2 {
 
             LineParser.getInstance().setMode(LineParser.Mode.DEEP);
             String line;
-
+            List<Line> MRecords = new ArrayList<>();
             List<Line> currentTRecord = new ArrayList<>();
             while ((line = sourceReader.readLine()) != null) {
+                String address = line.split("\\s+")[0];
                 line = Arrays.stream(line.split("\\s+")).skip(1).collect(Collectors.joining("  "));
-                System.out.println(line);
+                System.out.println("---" + line);
                 Line parsedLine = LineParser.getInstance().parse(line);
-                parsedLine.setAddress();
+                if (!parsedLine.isComment() && !parsedLine.isEmpty())
+                    parsedLine.setAddress(Integer.parseInt(address, 16));
+
                 if (parsedLine.isAssemblerExecutable()) {//is this an executable
                     parsedLine.execute();//execute it
 
                     if (parsedLine.isStart())//is it a start
-                        HTMEWriter.println(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
+                        HTMEWriter.print(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
 
                     if (parsedLine.isEnd())//is it an end
-                        HTMEWriter.println(createERecord(parsedLine.getOperand()));
-                } else {
-                    if (parsedLine.getObjectCode().getOpcode() != null)/* if this is not a reserve*/ {
-
-                        if (currentTRecord.size() + parsedLine.getObjectCode().getLength() <= 30)//if it fits in record
-                            currentTRecord.add(parsedLine);
-                        else//if it doesn't fit
-                        {
-                            HTMEWriter.println(createTRecord(currentTRecord));//print current record
-                            currentTRecord.add(parsedLine);
-                        }
-                    } else {// if it is a reserve
-                        HTMEWriter.println(createTRecord(currentTRecord));
+                    {
+                        HTMEWriter.print(createERecord(parsedLine.getOperand()));
+                        HTMEWriter.print(createMRecords(MRecords));
                     }
+
+                } else if (parsedLine.getObjectCode() != null && !parsedLine.getObjectCode().toString().equals("null"))/* if this is not a reserve*/ {
+                    System.out.println("-----------------------adding" + parsedLine + " as " + parsedLine.getObjectCode());
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$foramat4?= " + parsedLine.getObjectCode().isFormat4());
+                    if (parsedLine.getObjectCode().isFormat4()) {
+                        MRecords.add(parsedLine);
+                    }
+                    if (currentTRecord.size() + parsedLine.getObjectCode().getLength() <= 30)//if it fits in record
+                    {
+                        currentTRecord.add(parsedLine);
+                    } else//if it doesn't fit
+                    {
+                        HTMEWriter.print(createTRecord(currentTRecord));//print current record
+                        currentTRecord.add(parsedLine);
+                    }
+                } else {// if it is a reserve
+                    HTMEWriter.print(createTRecord(currentTRecord));
                 }
             }
         } catch (FileNotFoundException e) {
@@ -61,21 +71,30 @@ public class Pass2 {
         }
     }
 
+    private static String createMRecords(List<Line> mRecords) {
+
+        return mRecords.stream()
+                .map(line -> "M" + String.format("%06x", line.getAddress() + 1) + "05")
+                .collect(Collectors.joining("\n"));
+    }
+
     private static String createTRecord(List<Line> currentTRecord) {
+        System.out.println("========================================currentTRecord = " + currentTRecord);
         if (currentTRecord.size() == 0)
             return "";
-        String builder = "T" +
+        String record = "T"+
                 currentTRecord.get(0).getAddress() +//add the address
                 String.format("%02x",
-                                currentTRecord.stream()//get the stream
+                        currentTRecord.stream()//get the stream
                                 .mapToInt(line -> line.getObjectCode().getLength())//map it to length of object code
-                                        .sum()) //sum all that up
+                                .sum()) //sum all that up
                 +
-                        currentTRecord.stream()
+                currentTRecord.stream()
                         .map(line -> line.getObjectCode().toString())//map to object code strings
                         .collect(Collectors.joining(""));//join those into one string
         currentTRecord.clear();//clear the list
-        return builder;
+
+        return record + "\n";
     }
 
     private static String createHRecord(String label, String operand) {
@@ -83,12 +102,13 @@ public class Pass2 {
         return "H" +
                 String.format("%6s", label) +
                 String.format("%06x", address) +
-                String.format("%06x", Assembler.getProgramLength());
+                String.format("%06x", Assembler.getProgramLength())
+                + "\n";
     }
 
     private static String createERecord(String operand) {
         int address = Integer.parseInt(operand, 16);
         return "E" +
-                String.format("%06x", address);
+                String.format("%06x", address) + "\n";
     }
 }

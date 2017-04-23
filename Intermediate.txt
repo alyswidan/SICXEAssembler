@@ -42,7 +42,8 @@
 005e                           JGT          ERROR               
 0061          EXIT2            LDA             #1               
 0064                           STA         RESULT               
-0067          ERROR           RSUB                              
-006a         RESULT           RESW              1               
-006d         BUFFER           RESB           4096               
-106d                           END          FIRST               
+0067          INPUT           BYTE             12               
+0068          ERROR           RSUB                              
+006b         RESULT           RESW              1               
+006e         BUFFER           RESB           4096               
+106e                           END          FIRST               

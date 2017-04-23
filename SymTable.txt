@@ -1,16 +1,17 @@
 ====================================
 |    Symbol    |   address         |
 ====================================
-|     RLOOP    |        26         |
 |     EXIT2    |        61         |
-|     CLOOP    |         3         |
+|     INPUT    |        67         |
 |     EXIT1    |        3c         |
 |    LENGTH    |        19         |
-|     ERROR    |        67         |
 |     FIRST    |         0         |
+|    BUFFER    |        6e         |
+|     RLOOP    |        26         |
+|     CLOOP    |         3         |
+|     ERROR    |        68         |
 |     RDREC    |        1c         |
 |    CMPREC    |        42         |
-|    RESULT    |        6a         |
-|    BUFFER    |        6d         |
+|    RESULT    |        6b         |
 |    PALIND    |         0         |
 ====================================

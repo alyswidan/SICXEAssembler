@@ -46,6 +46,7 @@ public class DirectiveResolver {
 
     public boolean isAReserve(String s)
     {
+        System.out.println(s+"-++++");
         return s.equalsIgnoreCase("resw") || s.equalsIgnoreCase("resb");
     }
     public boolean isDirective(String test) {
@@ -83,6 +84,7 @@ public class DirectiveResolver {
     }
 
     private void executeEnd(String operand) {
+
         Assembler.setProgramLength(Assembler.getLocationCounter());
     }
 
@@ -147,12 +149,19 @@ public class DirectiveResolver {
         return o;
     }
 
-    public void executeStart(String operand) {
+    public void executeStart(String operand)
+    {
+
         Assembler.setLocationCounter(Integer.parseInt(operand, 16));
     }
 
     public void executeBase(String operand) {
-        LineParser.getInstance().setBase(Integer.parseInt(operand));
+        if(LineParser.getInstance().getMode()== LineParser.Mode.DEEP)
+        {
+            System.out.println("+++++++++++++++++++++++++setting base to "+operand);
+            LineParser.getInstance().setBase(Integer.parseInt(operand));
+        }
+
         // TODO: 4/20/2017 check if operand of base is hex or no
     }
 

@@ -151,6 +151,7 @@ public class Line {
     }
 
     public void execute() throws UndefinedMnemonicException {
+
         DirectiveResolver.getInstance().executeDirective(mnemonic, operand);
     }
 

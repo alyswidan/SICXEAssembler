@@ -42,6 +42,7 @@ public class SingleArgNode extends ParseNode {
             System.out.println("looking up "+clean);
             if (!SymTab.getInstance().containsKey(clean))
                 throw new UndefinedLabelException();
+            System.out.println("found arg to be "+SymTab.getInstance().get(clean));
             disp = computeRelativeDisp(SymTab.getInstance().get(clean));
         }
         System.out.printf("the computed disp is %03x\n",disp);
@@ -53,20 +54,27 @@ public class SingleArgNode extends ParseNode {
         if(getState("format").equalsIgnoreCase("4"))return arg;
         System.out.println("trying to compute relative displacement with disp = " + arg);
         //pc relative?
-        if (arg > -2047 && arg < 2048) {
+        int computed = arg - (Assembler.getLocationCounter() + Integer.parseInt(getState("format")));
+        System.out.println("for pc computed = " + computed);
+        if (computed > -2048 && computed < 2047) {
             System.out.println("trying pc relative");
             setFlags(getFlags()|(1<<1));
-            int x = arg = arg - (Assembler.getLocationCounter() + Integer.parseInt(getState("format")));
-            System.out.println("x = " + x);
-            return x;
+            return computed;
         }
         //base relative
-        else if (parser.isBaseActivated() && arg < 4048) {
-            System.out.println("trying base relative");
-            setFlags(getFlags()|(1<<2));
-            return arg - parser.getBase();
-        }
+        else if (parser.isBaseActivated())
+            System.out.println("===================================trying base relative");
+            System.out.printf("base = %x\n",parser.getBase());
+            computed = arg - parser.getBase();
+        System.out.println("for base computed = " + computed);
+            System.out.println();
+            if (computed < 4096) {
+                setFlags(getFlags() | (1 << 2));
+                return computed;
+            }
         //neither
+
+        //System.out.println("displacment out of bounds ");
         throw new DisplacementOutOfBoundException();
     }
 
@@ -82,6 +90,7 @@ public class SingleArgNode extends ParseNode {
     public void addState(String key, String val) throws AssemblerException {
         if(key.equals("arg") && LineParser.getInstance().getMode().equals(LineParser.Mode.DEEP)) {
             arg = val;
+            super.addState("operand",val);
             super.addState("arg",String.valueOf(getDisplacement()));
             System.out.printf("setting flags to %x\n",getFlags());
             super.addState("flags",String.valueOf(getFlags()));

@@ -5,6 +5,7 @@ import com.systems.programming.assembler.ParseTree.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Mohamed Mahmoud on 3/26/2017.
@@ -58,17 +59,20 @@ public class LineParser {
     {
         System.out.println("-----"+parsedLine.getAddress());
         ObjectCode code = new ObjectCode();
+        if(getMode()==Mode.DEEP) System.out.println("path = " + path.stream().map(s->s.getClass().getSimpleName()).collect(Collectors.toList()));
         path.forEach(n->{
 
             if (n instanceof LabelNode) parsedLine.setLabel(n.getState("label"));
 
             if (n instanceof InstructionNode) {
+                parsedLine.setMnemonic(n.getState("instruction"));
                 code.setOpcode(n.getState("opcode"));
                 code.setLength(OpTable.getInstance().getFormat(n.getState("instruction")));
             }
             if (n instanceof SingleArgNode) {
                 code.setFlags(Integer.parseInt(n.getState("flags")));
                 code.setArg1(Integer.parseInt(n.getState("arg")));
+                parsedLine.setOperand(n.getState("operand"));
             }
             if(n instanceof DoubleArgsNode)
             {
@@ -77,12 +81,13 @@ public class LineParser {
             }
             if (n instanceof DirectiveNode)
             {
-                System.out.println("dasdasdasdasdasfas");
                 parsedLine.setMnemonic(n.getState("directive"));
                 code.setDirective(true);
             }
             if(n instanceof DirectiveArgNode)
             {
+                parsedLine.setOperand(n.getState("arg"));
+                System.out.println("----------------->"+n.getState("arg"));
                 code.setOpcode(n.getState("objectCode"));
             }
         });

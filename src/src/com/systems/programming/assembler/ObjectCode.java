@@ -22,6 +22,7 @@ public class ObjectCode {
 
     public ObjectCode(){}
 
+    public boolean isFormat4(){return (flags&1)==1;}
     public void setOpcode(String opcode) {
         this.opcode = opcode;
     }
