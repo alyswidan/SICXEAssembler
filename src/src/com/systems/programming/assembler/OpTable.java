@@ -28,12 +28,15 @@ public class OpTable {
     }
 
     public boolean isInstruction(String key) {
-        if (key.charAt(0) == '+')
-            key = key.substring(1);
+
+        if (key.charAt(0) == '+') key = key.substring(1);
+        System.out.println(table.containsKey(key.toUpperCase()));
         return table.containsKey(key.toUpperCase());
     }
 
     public int getOpcode(String mnemonic) {
+        if (mnemonic.charAt(0) == '+') mnemonic = mnemonic.substring(1);
+        System.out.println(mnemonic);
         return table.get(mnemonic).opcode;
     }
 
@@ -47,6 +50,7 @@ public class OpTable {
 
     public int getOperandCount(String mnemonic) {
         if (mnemonic.charAt(0) == '+') mnemonic = mnemonic.substring(1);
+
         return table.get(mnemonic).operandCount;
     }
 

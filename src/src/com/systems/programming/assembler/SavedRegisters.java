@@ -1,9 +1,12 @@
 package com.systems.programming.assembler;
 
+import com.systems.programming.assembler.Exceptions.UnknownRegisterException;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +17,7 @@ public class SavedRegisters {
 
     private static SavedRegisters ourInstance = new SavedRegisters();
 
-    //table<name,number>
-    private Map<String, String> regTable = new HashMap<>();
+    private enum REGISTERS{A,X,L,B,S,T};
 
     private SavedRegisters() {
 
@@ -25,26 +27,12 @@ public class SavedRegisters {
         return ourInstance;
     }
 
-    public Map<String, String> getRegTable() {
-        return regTable;
+    public boolean containsValue( String reg) {
+        return Arrays.stream(REGISTERS.values()).map(REGISTERS::name).anyMatch(s->s.equalsIgnoreCase(reg));
     }
-
-    public boolean containsValue(Object key) {
-        return regTable.containsKey(key);
-    }
-
-    public void init(File savedReg) {
-        String line;
-        try (BufferedReader br = new BufferedReader(new FileReader(savedReg))) {
-            while ((line = br.readLine()) != null) {
-                //split on any number of whitespaces more than 2
-                String parts[] = line.split("\\s{2,100}");
-                //put the register name and number
-                regTable.put(parts[0], parts[1]);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Cannot read Symbol table from file");
-        }
+    public int getValue(String reg)throws UnknownRegisterException
+    {
+        if(!containsValue(reg))throw new UnknownRegisterException();
+        return REGISTERS.valueOf(reg).ordinal();
     }
 }

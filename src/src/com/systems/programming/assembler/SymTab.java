@@ -21,27 +21,23 @@ public class SymTab {
         return ourInstance;
     }
 
-    public boolean containsKey(Object key) {
-        return table.containsKey(key);
+    public boolean containsKey(String label) {
+        return table.containsKey(label);
     }
 
-    public boolean containsValue(Object value) {
-        return table.containsValue(value);
+    public Integer get(String label) {
+        return table.get(label);
     }
 
-    public Integer get(Object key) {
-        return table.get(key);
+    public Integer put(String label, Integer address) throws DuplicateLabelException {
+
+        System.out.println("adding label "+label+" to sym table");
+        if (containsKey(label)) throw new DuplicateLabelException();
+        return table.put(label, address);
     }
 
-    public Integer put(String key, Integer value) throws DuplicateLabelException {
-
-        if (containsKey(key)) throw new DuplicateLabelException();
-        return table.put(key, value);
-
-    }
-
-    public Integer remove(Object key) {
-        return table.remove(key);
+    public Integer remove(String label) {
+        return table.remove(label);
     }
 
     public Map<String, Integer> getTable() {
