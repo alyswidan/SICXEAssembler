@@ -26,7 +26,9 @@ public class DirectiveNode extends ParseNode {
             next = new DirectiveArgNode();
 
 
-        System.out.println(next);
+/*
+        System.out.println("directive is "+getState("directive")+" operand is "+token+" mode is "+LineParser.getInstance().getMode() );
+*/
         next.addState("directive", getState("directive"));
         next.addState("arg", token);
         return next;

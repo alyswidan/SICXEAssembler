@@ -1,6 +1,6 @@
 package com.systems.programming.assembler.tests;
 
-import com.systems.programming.assembler.Assembler;
+import com.systems.programming.assembler.*;
 import com.systems.programming.assembler.DirectiveResolver;
 import com.systems.programming.assembler.LineParser;
 import com.systems.programming.assembler.Pass1;

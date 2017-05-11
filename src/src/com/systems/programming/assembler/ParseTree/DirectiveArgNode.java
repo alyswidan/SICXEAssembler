@@ -2,6 +2,7 @@ package com.systems.programming.assembler.ParseTree;
 
 import com.systems.programming.assembler.DirectiveResolver;
 import com.systems.programming.assembler.Exceptions.AssemblerException;
+import com.systems.programming.assembler.LineParser;
 import com.systems.programming.assembler.SymTab;
 import sun.awt.Symbol;
 
@@ -22,7 +23,10 @@ public class DirectiveArgNode extends ParseNode {
         {
 
             try {
-                Integer.parseInt(val);
+                int radix = getState("directive").equalsIgnoreCase("start")?16:10;
+
+                Integer.parseInt(val,radix);
+
                 super.addState(key,val);
             }
             catch (NumberFormatException ex)
@@ -32,8 +36,7 @@ public class DirectiveArgNode extends ParseNode {
             if(!resolver.isAssemblerExecutable(getState("directive")) &&
                             !resolver.isAReserve(getState("directive")))
             {
-                System.out.println("val = " + val);
-                System.out.println(getState("directive"));
+
                 super.addState("objectCode", DirectiveResolver
                         .getInstance()
                         .getObjectCode(getState("directive"),val)

@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 public class DirectiveResolver {
     private static DirectiveResolver ourInstance;
-
+    private static String startAddress;
     private String directives[] = {"word", "byte", "resb", "resw", "base", "start", "end", "nobase"};
     private String hasNoObjectCode[] = {"end", "start", "base", "nobase", "ltorg"};
     private Map<String, Method> handlers = new HashMap<>(13);
@@ -46,7 +46,6 @@ public class DirectiveResolver {
 
     public boolean isAReserve(String s)
     {
-        System.out.println(s+"-++++");
         return s.equalsIgnoreCase("resw") || s.equalsIgnoreCase("resb");
     }
     public boolean isDirective(String test) {
@@ -54,7 +53,6 @@ public class DirectiveResolver {
     }
 
     public boolean isAssemblerExecutable(String mnemonic) {
-        System.out.println("checking "+mnemonic);
         return Arrays.stream(hasNoObjectCode).anyMatch(x -> x.equalsIgnoreCase(mnemonic));
     }
 
@@ -77,15 +75,21 @@ public class DirectiveResolver {
 
     public void executeDirective(String mnemonic,String operand) throws UndefinedMnemonicException
     {
-        if(mnemonic.equalsIgnoreCase("start"))executeStart(operand);
+        if(mnemonic.equalsIgnoreCase("start")){
+            startAddress = operand;
+            executeStart(operand);
+        }
         else if(mnemonic.equalsIgnoreCase("base"))executeBase(operand);
         else if(mnemonic.equalsIgnoreCase("nobase"))executeNoBase();
         else if(mnemonic.equalsIgnoreCase("end"))executeEnd(operand);
     }
 
     private void executeEnd(String operand) {
+        Assembler.setProgramLength(Assembler.getLocationCounter() - Integer.parseInt(startAddress,16));
+    }
 
-        Assembler.setProgramLength(Assembler.getLocationCounter());
+    public static String getStartAddress() {
+        return startAddress;
     }
 
     public ObjectCode parseByte(String operand) {
@@ -93,7 +97,7 @@ public class DirectiveResolver {
         objectCode.setDirective(true);
         try {
             //try to parse as an integer
-            objectCode.setOpcode(String.format("%02x", Integer.parseInt(operand)));
+            objectCode.setOpcode(String.format("%02X", Integer.parseInt(operand)));
             objectCode.setLength(1);
         }
         //if this is not a valid integer try to parse as a literal
@@ -116,15 +120,14 @@ public class DirectiveResolver {
             Matcher charMatcher = Pattern.compile("C'(.*)'$").matcher(operand);
             //we then get group 1 since 0 is the whole string ie:C'dasdas'
             if (hexMatcher.find()) {
-                System.out.println("hex");
                 objectCode.setOpcode(hexMatcher.group(1));
             } else if (charMatcher.find()) {
-                System.out.println("char");
                 StringBuilder builder = new StringBuilder();
-                charMatcher.group(1).chars().mapToObj(i -> String.format("%02x", i)).forEach(builder::append);
+                charMatcher.group(1).chars().mapToObj(i -> String.format("%02X", i)).forEach(builder::append);
                 objectCode.setOpcode(builder.toString());
             }
-            System.out.println(objectCode.getOpcode());
+            System.out.println("operand for byte is "+objectCode.getOpcode().length()/2);
+
             objectCode.setLength(objectCode.getOpcode().length()/2);
         }
         return objectCode;
@@ -132,7 +135,8 @@ public class DirectiveResolver {
 
     public ObjectCode parseWord(String operand) {
         ObjectCode objectCode = new ObjectCode();
-        objectCode.setOpcode(String.format("%06x", Integer.parseInt(operand)));
+        objectCode.setOpcode(String.format("%06X", Integer.parseInt(operand)));
+        objectCode.setDirective(true);
         objectCode.setLength(3);
         return objectCode;
     }
@@ -158,7 +162,6 @@ public class DirectiveResolver {
     public void executeBase(String operand) {
         if(LineParser.getInstance().getMode()== LineParser.Mode.DEEP)
         {
-            System.out.println("+++++++++++++++++++++++++setting base to "+operand);
             LineParser.getInstance().setBase(Integer.parseInt(operand));
         }
 

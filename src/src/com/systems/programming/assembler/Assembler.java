@@ -9,20 +9,16 @@ public class Assembler {
     private static int locationCounter;
     private static boolean isOptableInitiallized = false;
     private static int programLength;
-
+    private static String inputPath = "./resources/code1.txt";
+    private static String intermediatePath = "Intermediate.txt";
+    private static String HTMEPath = "HTME Record.txt";
+    private static String SymTablePath = "SymTable.txt";
 
     public static void main(String[] args) {
         init();
         Pass1.execute();
-        System.out.println("pass1===============================================================================");
         Pass2.execute();
     }
-
-
-
-
-
-
 
     public static int getLocationCounter() {
         return locationCounter;
@@ -52,6 +48,39 @@ public class Assembler {
             OpTable.getInstance().init(new File("./resources/InstructionSet.txt"));
             isOptableInitiallized = true;
         }
+        //System.out.println("-----------> " + Integer.parseInt(DirectiveResolver.getStartAddress(),16));
         locationCounter = 0;
+    }
+
+    public static String getInputPath() {
+        return inputPath;
+    }
+
+    public static void setInputPath(String inputPath) {
+        Assembler.inputPath = inputPath;
+    }
+
+    public static String getIntermediatePath() {
+        return intermediatePath;
+    }
+
+    public static void setIntermediatePath(String intermediatePath) {
+        Assembler.intermediatePath = intermediatePath;
+    }
+
+    public static String getHTMEPath() {
+        return HTMEPath;
+    }
+
+    public static void setHTMEPath(String HTMEPath) {
+        Assembler.HTMEPath = HTMEPath;
+    }
+
+    public static String getSymTablePath() {
+        return SymTablePath;
+    }
+
+    public static void setSymTablePath(String symTablePath) {
+        SymTablePath = symTablePath;
     }
 }

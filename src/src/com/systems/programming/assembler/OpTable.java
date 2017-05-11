@@ -30,13 +30,11 @@ public class OpTable {
     public boolean isInstruction(String key) {
 
         if (key.charAt(0) == '+') key = key.substring(1);
-        System.out.println(table.containsKey(key.toUpperCase()));
         return table.containsKey(key.toUpperCase());
     }
 
     public int getOpcode(String mnemonic) {
         if (mnemonic.charAt(0) == '+') mnemonic = mnemonic.substring(1);
-        System.out.println(mnemonic);
         return table.get(mnemonic).opcode;
     }
 
@@ -102,11 +100,6 @@ public class OpTable {
     }
 
     //used for testing only comment out when not testing this class individually
-  /*public static void main(String[] args) {
 
-      OpTable.getInstance().init(new File("E:\\aly\\projects\\SICXE-Assembler\\SICXE-Assembler\\SICXE-BOMBA\\src\\instructionSet"));
-      System.out.println(OpTable.getInstance());
-      System.out.println(Arrays.toString("C'abcdads".split("'(.*?)'")));
-  }*/
 
 }

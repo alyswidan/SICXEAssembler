@@ -39,8 +39,9 @@ public class InstructionNode extends ParseNode {
                 if (transitionRequest.matches(".+,.+(,X)?"))
                     if (LineParser.getInstance().getMode() == LineParser.Mode.SHALLOW)
                         next = new SingleArgNode();
-                    else
+                    else {
                         next = new DoubleArgsNode();
+                    }
                 else
                     throw ex;
                 break;
@@ -48,8 +49,9 @@ public class InstructionNode extends ParseNode {
                 next = null;
         }
         if (next != null) {
-
+            next.addState("instruction",getState("instruction"));
             next.addState("arg", transitionRequest);
+
         }
 
         return next;
@@ -74,6 +76,7 @@ public class InstructionNode extends ParseNode {
     public void addState(String key, String val) throws AssemblerException {
         if (key.equalsIgnoreCase("instruction")) {
             super.addState(key, val);
+            System.out.println(val);
             addState("opcode", String.valueOf(OpTable.getInstance().getOpcode(val)));
         } else {
             super.addState(key, val);

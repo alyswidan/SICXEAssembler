@@ -1,7 +1,5 @@
 package com.systems.programming.assembler;
 
-import java.util.Arrays;
-
 /**
  * Created by Mohamed Mahmoud on 4/13/2017.
  */
@@ -12,9 +10,8 @@ public class ObjectCode {
     private boolean isDirective = false;
     public ObjectCode(String opcode) {
 
-        System.out.println("setting the opcode to "+opcode);
         this.opcode = opcode;
-        this.length = -1;
+
         this.flags = -1;
         this.arg1 = 0;
         this.arg2 = 0;
@@ -40,6 +37,7 @@ public class ObjectCode {
     }
 
     public void setLength(int length){
+
         this.length = length;
     }
 
@@ -70,15 +68,14 @@ public class ObjectCode {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        System.out.println("flags = " + flags);
-        if(isDirective || length == 1)/*directive or format 1*/ {
-            System.out.println("format 1 or directive");
-            System.out.println(length);
+
+        if(isDirective)/*directive */ {
+            builder.append(opcode);
+        } else if (length == 1){
             builder.append(opcode);
         } else if(length==2)//format 2
         {
-            System.out.println("format 2");
-            builder.append(Integer.toHexString(Integer.parseInt(opcode))).append(String.format("%01x", arg1)).append(String.format("%01x", arg2));
+            builder.append(Integer.toHexString(Integer.parseInt(opcode))).append(String.format("%01X", arg1)).append(String.format("%01X", arg2));
         } else
         {
             int code = Integer.parseInt(getOpcode());
@@ -86,23 +83,19 @@ public class ObjectCode {
             code |= flags;
             if(length==3)
             {
-                System.out.println("format 3");
-                System.out.println(Integer.toBinaryString(code));
                 code<<=12;
                 arg1 &=0xfff;
                 code|=arg1;
-                builder.append(String.format("%06x",code));
+                builder.append(String.format("%06X",code));
             }
             else
             {
-                System.out.println("format 4");
                 arg1&=0xffffff;
                 code<<=20;
                 code|=arg1;
-                builder.append(String.format("%08x",code));
+                builder.append(String.format("%08X",code));
             }
         }
-        System.out.println("hhaha == "+builder.toString());
         return builder.toString();
     }
 }

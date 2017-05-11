@@ -21,14 +21,13 @@ public class SingleArgNode extends ParseNode {
     }
 
     private String getCleanArg(String arg) {
-        String x=arg;
+        String x = arg;
         if (arg.contains("#"))
             x = arg.replace("#", "");
         else if (arg.contains("@"))
             x = arg.replace("@", "");
-        if(arg.contains(",X")) {
-            System.out.println("indexed__________________________");
-            x = arg.replace(",X","");
+        if (arg.contains(",X")) {
+            x = arg.replace(",X", "");
         }
         return x;
     }
@@ -36,45 +35,51 @@ public class SingleArgNode extends ParseNode {
     public int getDisplacement() throws AssemblerException {
         int disp;
         String clean = getCleanArg(arg);
+        /*System.out.println("clean arg is " + clean + " at instruction "
+                + getState("instruction")
+                + " mode is " + LineParser.getInstance().getMode());*/
         try {
             disp = Integer.parseInt(clean);
         } catch (NumberFormatException ex) {
-            System.out.println("looking up "+clean);
             if (!SymTab.getInstance().containsKey(clean))
                 throw new UndefinedLabelException();
-            System.out.println("found arg to be "+SymTab.getInstance().get(clean));
+
             disp = computeRelativeDisp(SymTab.getInstance().get(clean));
         }
-        System.out.printf("the computed disp is %03x\n",disp);
         return disp;
     }
 
     public int computeRelativeDisp(int arg) throws DisplacementOutOfBoundException {
         LineParser parser = LineParser.getInstance();
-        if(getState("format").equalsIgnoreCase("4"))return arg;
-        System.out.println("trying to compute relative displacement with disp = " + arg);
+        if (getState("format").equalsIgnoreCase("4"))
+        {
+            System.out.printf("-> current pc is  %X\n",(Assembler.getLocationCounter() + Integer.parseInt(getState("format"))));
+            return arg;
+        }
+
+        System.out.println("is base activated = "+parser.isBaseActivated());
         //pc relative?
         int computed = arg - (Assembler.getLocationCounter() + Integer.parseInt(getState("format")));
-        System.out.println("for pc computed = " + computed);
-        if (computed > -2048 && computed < 2047) {
-            System.out.println("trying pc relative");
-            setFlags(getFlags()|(1<<1));
+        System.out.println("pc->computed = " + computed);
+        if (-2048 < computed && computed < 2047) {
+            setFlags(getFlags() | (1 << 1));
+
             return computed;
         }
         //base relative
-        else if (parser.isBaseActivated())
-            System.out.println("===================================trying base relative");
-            System.out.printf("base = %x\n",parser.getBase());
+        else if (parser.isBaseActivated()) {
+
             computed = arg - parser.getBase();
-        System.out.println("for base computed = " + computed);
-            System.out.println();
+            System.out.println("base->computed = " + computed);
             if (computed < 4096) {
                 setFlags(getFlags() | (1 << 2));
                 return computed;
             }
+        }
+
         //neither
 
-        //System.out.println("displacment out of bounds ");
+
         throw new DisplacementOutOfBoundException();
     }
 
@@ -88,14 +93,13 @@ public class SingleArgNode extends ParseNode {
 
     @Override
     public void addState(String key, String val) throws AssemblerException {
-        if(key.equals("arg") && LineParser.getInstance().getMode().equals(LineParser.Mode.DEEP)) {
+        if (key.equals("arg") && LineParser.getInstance().getMode().equals(LineParser.Mode.DEEP)) {
             arg = val;
-            super.addState("operand",val);
-            super.addState("arg",String.valueOf(getDisplacement()));
-            System.out.printf("setting flags to %x\n",getFlags());
-            super.addState("flags",String.valueOf(getFlags()));
-        }
-        else
-            super.addState(key,val);
+            super.addState("operand", val);
+            super.addState("arg", String.valueOf(getDisplacement()));
+
+            super.addState("flags", String.valueOf(getFlags()));
+        } else
+            super.addState(key, val);
     }
 }

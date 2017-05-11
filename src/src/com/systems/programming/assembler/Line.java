@@ -94,7 +94,7 @@ public class Line {
     }
 
     public boolean isStart() {
-        System.out.println(mnemonic.equalsIgnoreCase("start"));
+
         if (mnemonic.equalsIgnoreCase("start"))
             start = this.getOperand();
         return mnemonic.equalsIgnoreCase("start");
@@ -106,7 +106,7 @@ public class Line {
 
     //classifies mnemonic and gets length of instruction
     public int getLength() throws UndefinedMnemonicException {
-        System.out.println(getMnemonic());
+
         int len = -1;
         if (OpTable.getInstance().isInstruction(getMnemonic()))
             len = OpTable.getInstance().getLength(getMnemonic());

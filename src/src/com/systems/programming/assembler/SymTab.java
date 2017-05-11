@@ -31,7 +31,7 @@ public class SymTab {
 
     public Integer put(String label, Integer address) throws DuplicateLabelException {
 
-        System.out.println("adding label "+label+" to sym table");
+        
         if (containsKey(label)) throw new DuplicateLabelException();
         return table.put(label, address);
     }

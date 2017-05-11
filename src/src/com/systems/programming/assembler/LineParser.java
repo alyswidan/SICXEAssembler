@@ -55,11 +55,9 @@ public class LineParser {
             return deepParse(parsedLine);
     }
 
-    private Line deepParse(Line parsedLine)
+    private Line deepParse(Line parsedLine) throws AssemblerException
     {
-        System.out.println("-----"+parsedLine.getAddress());
         ObjectCode code = new ObjectCode();
-        if(getMode()==Mode.DEEP) System.out.println("path = " + path.stream().map(s->s.getClass().getSimpleName()).collect(Collectors.toList()));
         path.forEach(n->{
 
             if (n instanceof LabelNode) parsedLine.setLabel(n.getState("label"));
@@ -87,7 +85,7 @@ public class LineParser {
             if(n instanceof DirectiveArgNode)
             {
                 parsedLine.setOperand(n.getState("arg"));
-                System.out.println("----------------->"+n.getState("arg"));
+
                 code.setOpcode(n.getState("objectCode"));
             }
         });
@@ -129,6 +127,7 @@ public class LineParser {
     }
 
     public void setBase(int base) {
+        System.out.println("activating base");
         this.base = base;
     }
 

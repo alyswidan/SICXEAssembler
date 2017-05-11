@@ -49,13 +49,12 @@ public abstract class ParseNode {
     }
 
     public void setState(Map<String,String> state) {
-        //System.out.println("arrived at node with "+state+" type = "+this.getClass().getSimpleName());
         this.state = state;
     }
 
     public void addState (String key,String val) throws AssemblerException
     {
-        System.out.println("adding "+key +" = "+val+" to "+this.getClass().getSimpleName() );
+
         state.put(key,val);
     }
 

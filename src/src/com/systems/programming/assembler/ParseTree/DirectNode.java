@@ -11,6 +11,7 @@ public class DirectNode extends SingleArgNode{
 
     @Override
     public int getFlags() {
+
         if(super.getFlags()==-1)
             super.setFlags((1<<5)
                            |(1<<4)

@@ -15,9 +15,9 @@ public class Pass1 {
     public static void execute() {
 
         Assembler.init();
-        try (BufferedReader sourceReader = new BufferedReader(new FileReader("./resources/code1.txt"));
-             PrintWriter intermediateFileWrite = new PrintWriter(new FileWriter("Intermediate.txt"));
-             PrintWriter symTableWrite = new PrintWriter(new FileWriter("SymTable.txt"))) {
+        try (BufferedReader sourceReader = new BufferedReader(new FileReader(Assembler.getInputPath()));
+             PrintWriter intermediateFileWrite = new PrintWriter(new FileWriter(Assembler.getIntermediatePath()));
+             PrintWriter symTableWrite = new PrintWriter(new FileWriter(Assembler.getSymTablePath()))) {
 
             String line;
 
@@ -36,7 +36,7 @@ public class Pass1 {
 
                     else if (!parsedLine.isEmpty()) {
                         //write address in first column
-                        intermediateFileWrite.printf("%04x", Assembler.getLocationCounter());
+                        intermediateFileWrite.printf("%04X", Assembler.getLocationCounter());
                         //write the parsedLine
                         intermediateFileWrite.println(parsedLine);
                         Assembler.IncrementLocationCounterBy(parsedLine.getLength());
