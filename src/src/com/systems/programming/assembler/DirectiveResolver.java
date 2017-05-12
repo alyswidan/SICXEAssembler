@@ -1,7 +1,6 @@
 package com.systems.programming.assembler;
 
-import com.systems.programming.assembler.Exceptions.InvalidExpressionException;
-import com.systems.programming.assembler.Exceptions.UndefinedMnemonicException;
+import com.systems.programming.assembler.Exceptions.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -173,7 +172,7 @@ public class DirectiveResolver {
         return SymTab.Type.ABSOLUTE;
     }
 
-    private boolean isExpression(String expr)
+    public boolean isExpression(String expr)
     {
         return Arrays.stream(operators).anyMatch(expr::equals);
     }
@@ -200,7 +199,29 @@ public class DirectiveResolver {
     // TODO: 13/05/17 this should add the label to the sym table evaluate the operand if it is an expr and replace expression with its value in the intermediate file
     public void executeEqu(Line parsedLine)
     {
+        int value;
+        try {
+            value = Integer.parseInt(parsedLine.getOperand());
+            //This will put in SymTable the label with its value not with the address
+            SymTab.getInstance().put(parsedLine.getLabel(),Integer.parseInt(parsedLine.getOperand()));
+        } catch (NumberFormatException ex) {
+            if(SymTab.getInstance().containsKey(parsedLine.getOperand()))
+                try {
+                    SymTab.getInstance().put(parsedLine.getLabel(),SymTab.getInstance().get(parsedLine.getOperand()));
+                } catch (DuplicateLabelException e) {
+                    e.printStackTrace();
+                }
 
+        } catch (DuplicateLabelException e) {
+            e.printStackTrace();
+        }
     }
 
+    public String executeExpression(String expression) {
+
+        return null;
+    }
 }
+
+
+

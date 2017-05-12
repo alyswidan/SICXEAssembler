@@ -1,6 +1,7 @@
 package com.systems.programming.assembler;
 
 import com.systems.programming.assembler.Exceptions.AssemblerException;
+import com.systems.programming.assembler.Exceptions.UndefinedMnemonicException;
 import com.systems.programming.assembler.ParseTree.*;
 
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class LineParser {
 
 
     }
-    private Line shallowParse(Line parsedLine) {
+    private Line shallowParse(Line parsedLine) throws UndefinedMnemonicException {
 
         //traverse the path and get components into corresponding variables
         path.forEach((ParseNode n) ->
@@ -111,6 +112,9 @@ public class LineParser {
             Assembler.setProgName(parsedLine.getLabel());
         if(parsedLine.isEqu())
             DirectiveResolver.getInstance().executeEqu(parsedLine);
+        if(DirectiveResolver.getInstance().isDirective(parsedLine.getMnemonic())
+                && DirectiveResolver.getInstance().isExpression(parsedLine.getOperand()))
+            parsedLine.setOperand(DirectiveResolver.getInstance().executeExpression(parsedLine.getOperand()));
         return parsedLine;
     }
 
