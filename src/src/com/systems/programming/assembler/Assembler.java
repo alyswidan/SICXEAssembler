@@ -1,6 +1,8 @@
 package com.systems.programming.assembler;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ADMIN on 4/20/2017.
@@ -14,12 +16,18 @@ public class Assembler {
     private static String HTMEPath = "HTME Record.txt";
     private static String SymTablePath = "SymTable.txt";
     private static String progName;
+    private static List<String>extDefs = new ArrayList<>();
 
 
     public static void main(String[] args) {
         init();
         Pass1.execute();
         Pass2.execute();
+    }
+
+    public static void addExtDef(String def)
+    {
+
     }
 
     public static int getLocationCounter() {

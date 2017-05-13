@@ -98,6 +98,7 @@ public class LineParser {
     }
     private Line shallowParse(Line parsedLine) throws UndefinedMnemonicException {
 
+        DirectiveResolver dr = DirectiveResolver.getInstance();
         //traverse the path and get components into corresponding variables
         path.forEach((ParseNode n) ->
         {
@@ -107,16 +108,22 @@ public class LineParser {
             if (n instanceof SingleArgNode || n instanceof DoubleArgsNode) parsedLine.setOperand(n.getState("arg"));
         });
 
-        //special treatment for those 2 as their effect appears in pass1
+        //special treatment for those as their effect appears in pass1
         if(parsedLine.isStart())
             Assembler.setProgName(parsedLine.getLabel());
 
         if(parsedLine.isEqu())
-            DirectiveResolver.getInstance().executeEqu(parsedLine);
+            dr.executeEqu(parsedLine);
 
-        if(DirectiveResolver.getInstance().isDirective(parsedLine.getMnemonic())
-                && DirectiveResolver.getInstance().isExpression(parsedLine.getOperand()))
-            parsedLine.setOperand(DirectiveResolver.getInstance().evalExpression(parsedLine.getOperand()));
+        if(dr.isDirective(parsedLine.getMnemonic()) && dr.isExpression(parsedLine.getOperand()))
+            parsedLine.setOperand(dr.evalExpression(parsedLine.getOperand()));
+
+        if(parsedLine.getMnemonic().equalsIgnoreCase("extref"))
+            dr.executeExtRef(parsedLine.getOperand());
+
+        if(parsedLine.getMnemonic().equalsIgnoreCase("org"))
+            dr.executeOrg(parsedLine.getOperand());
+
         return parsedLine;
     }
 
