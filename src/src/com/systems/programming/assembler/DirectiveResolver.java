@@ -1,8 +1,9 @@
 package com.systems.programming.assembler;
 
-import com.systems.programming.assembler.Exceptions.*;
+import com.systems.programming.assembler.Exceptions.DuplicateLabelException;
+import com.systems.programming.assembler.Exceptions.InvalidExpressionException;
+import com.systems.programming.assembler.Exceptions.UndefinedMnemonicException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,10 +19,11 @@ public class DirectiveResolver {
     private static DirectiveResolver ourInstance;
     private static String startAddress;
     private String directives[] = {"word", "byte", "resb", "resw", "base",
-                                "start", "end", "nobase","org","equ","csect","extref"};
-    private String hasNoObjectCode[] = {"end", "start", "base", "nobase", "ltorg","equ","org","csect"};
-    private String operators[] = {"+","-","*","/"};
+            "start", "end", "nobase", "org", "equ", "csect", "extref"};
+    private String hasNoObjectCode[] = {"end", "start", "base", "nobase", "ltorg", "equ", "org", "csect"};
+    private String operators[] = {"+", "-", "*", "/"};
     private Map<String, Method> handlers = new HashMap<>(13);
+
     private DirectiveResolver() {
 
 
@@ -47,10 +49,10 @@ public class DirectiveResolver {
         return ourInstance;
     }
 
-    public boolean isAReserve(String s)
-    {
+    public boolean isAReserve(String s) {
         return s.equalsIgnoreCase("resw") || s.equalsIgnoreCase("resb");
     }
+
     public boolean isDirective(String test) {
         return Arrays.stream(directives).anyMatch(elem -> elem.equalsIgnoreCase(test));
     }
@@ -61,15 +63,15 @@ public class DirectiveResolver {
 
 
     public int getLength(String mnemonic, String operand) {
-        ObjectCode objectCode = getObjectCode(mnemonic,operand);
-        if(objectCode == null)
+        ObjectCode objectCode = getObjectCode(mnemonic, operand);
+        if (objectCode == null)
             return 0;
         else return objectCode.getLength();
     }
 
     public ObjectCode getObjectCode(String mnemonic, String operand) {
         ObjectCode ans = null;
-        if(isExpression(operand))
+        if (isExpression(operand))
             operand = String.valueOf(evalExpression(operand));
 
         if (mnemonic.equalsIgnoreCase("byte")) ans = parseByte(operand);
@@ -79,16 +81,14 @@ public class DirectiveResolver {
         return ans;
     }
 
-    public void executeDirective(String mnemonic,String operand) throws UndefinedMnemonicException
-    {
-        if(mnemonic.equalsIgnoreCase("start")){
+    public void executeDirective(String mnemonic, String operand) throws UndefinedMnemonicException {
+        if (mnemonic.equalsIgnoreCase("start")) {
             startAddress = operand;
             executeStart(operand);
-        }
-        else if(mnemonic.equalsIgnoreCase("base"))executeBase(operand);
-        else if(mnemonic.equalsIgnoreCase("nobase"))executeNoBase();
-        else if(mnemonic.equalsIgnoreCase("end"))executeEnd(operand);
-        else if(mnemonic.equalsIgnoreCase("extdef"))executeExtDef(operand);
+        } else if (mnemonic.equalsIgnoreCase("base")) executeBase(operand);
+        else if (mnemonic.equalsIgnoreCase("nobase")) executeNoBase();
+        else if (mnemonic.equalsIgnoreCase("end")) executeEnd(operand);
+        else if (mnemonic.equalsIgnoreCase("extdef")) executeExtDef(operand);
     }
 
     private void executeExtDef(String operand) {
@@ -101,7 +101,7 @@ public class DirectiveResolver {
     }
 
     private void executeEnd(String operand) {
-        Assembler.setProgramLength(Assembler.getLocationCounter() - Integer.parseInt(startAddress,16));
+        Assembler.setProgramLength(Assembler.getLocationCounter() - Integer.parseInt(startAddress, 16));
     }
 
     public static String getStartAddress() {
@@ -142,9 +142,9 @@ public class DirectiveResolver {
                 charMatcher.group(1).chars().mapToObj(i -> String.format("%02X", i)).forEach(builder::append);
                 objectCode.setOpcode(builder.toString());
             }
-            System.out.println("operand for byte is "+objectCode.getOpcode().length()/2);
+            System.out.println("operand for byte is " + objectCode.getOpcode().length() / 2);
 
-            objectCode.setLength(objectCode.getOpcode().length()/2);
+            objectCode.setLength(objectCode.getOpcode().length() / 2);
         }
         return objectCode;
     }
@@ -170,83 +170,74 @@ public class DirectiveResolver {
     }
 
     // TODO: 13/05/17 evaluate an expression get its type and check if it is an expression
-    public String evalExpression(String operand)
-    {
+    public String evalExpression(String operand) {
         SymTab symTab = SymTab.getInstance();
         Pattern p = Pattern.compile("(\\+)|([a-zA-Z]+)|(\\d+)");
         Matcher m = p.matcher(operand);
-        String curr,prev=null;
+        String curr, prev = null;
         int res = 0;
-        while(m.find())
-        {
-            curr = m.group( 1 );
-            if(curr.equals("+") || curr.equals("-"))
-            {}
-            if((prev == null || prev.equals ("+")))
-                if(curr.matches("//d+"))
-                    res+=Integer.parseInt(curr);
+        while (m.find()) {
+            curr = m.group(1);
+            if (curr.equals("+") || curr.equals("-")) {
+            }
+            if ((prev == null || prev.equals("+")))
+                if (curr.matches("//d+"))
+                    res += Integer.parseInt(curr);
                 else
-                    res+=symTab.get(curr);
+                    res += symTab.get(curr);
             else if (prev.equals("-"))
-                if(curr.matches("//d+"))
-                    res-=Integer.parseInt(curr);
+                if (curr.matches("//d+"))
+                    res -= Integer.parseInt(curr);
                 else
-                    res-=symTab.get(curr);
+                    res -= symTab.get(curr);
             prev = curr;
         }
         return String.valueOf(res);
     }
-    public SymTab.Type getExpressionType(String operand) throws InvalidExpressionException
-    {
+
+    public SymTab.Type getExpressionType(String operand) throws InvalidExpressionException {
         SymTab symTab = SymTab.getInstance();
         int freq[] = new int[2];
         Pattern p = Pattern.compile("(\\+)|([a-zA-Z]+)|(\\d+)");
         Matcher m = p.matcher(operand);
-        String curr,prev=null;
-        while(m.find())
-        {
-            curr = m.group( 1 );
-            if(curr.equals("+") || curr.equals("-"))
-            {}
-            else if((prev == null || prev.equals ("+")))
-                freq[symTab.getCSect(curr).equals(Assembler.getProgName())?0:1]++;
+        String curr, prev = null;
+        while (m.find()) {
+            curr = m.group(1);
+            ///////////////////here bro
+            if (curr.equals("+") || curr.equals("-")) {
+            } else if ((prev == null || prev.equals("+")))
+                freq[symTab.getCSect(curr).equals(Assembler.getProgName()) ? 0 : 1]++;
             else if (prev.equals("-"))
-                freq[symTab.getCSect(curr).equals(Assembler.getProgName())?0:1]--;
+                freq[symTab.getCSect(curr).equals(Assembler.getProgName()) ? 0 : 1]--;
             prev = curr;
         }
-        if(freq[0]==freq[1] && freq[0]==0)
+        if (freq[0] == freq[1] && freq[0] == 0)
             return SymTab.Type.ABSOLUTE;
-        else if (freq[0]!=freq[1] && (freq[1]==1 || freq[0]==1))
+        else if (freq[0] != freq[1] && (freq[1] == 1 || freq[0] == 1))
             return SymTab.Type.RELATIVE;
         else throw new InvalidExpressionException();
     }
 
-    public boolean isExpression(String expr)
-    {
+    public boolean isExpression(String expr) {
         return Arrays.stream(operators).anyMatch(expr::equals);
     }
 
 
-
-    public void executeStart(String operand)
-    {
+    public void executeStart(String operand) {
         Assembler.setLocationCounter(Integer.parseInt(operand, 16));
     }
 
     public void executeBase(String operand) {
-        if(LineParser.getInstance().getMode()== LineParser.Mode.DEEP)
-        {
+        if (LineParser.getInstance().getMode() == LineParser.Mode.DEEP) {
             LineParser.getInstance().setBase(Integer.parseInt(operand));
         }
     }
-
 
     public void executeNoBase() {
         LineParser.getInstance().deactivateBase();
     }
 
-    public void executeExtRef(String operands)
-    {
+    public void executeExtRef(String operands) {
         Stream.of(operands.split(",")).forEach(ref -> {
             try {
                 SymTab.getInstance().put(ref, 0);
@@ -256,22 +247,27 @@ public class DirectiveResolver {
         });
     }
 
-    // TODO: 13/05/17 this should add the label to the sym table evaluate the operand if it is an expr and replace expression with its value in the intermediate file
-    public void executeEqu(Line parsedLine)
-    {
+    // TODO: 13/05/17 this should add the label to the sym table
+    // evaluate the operand if it is an expr and replace expression with its value in the intermediate file
+    public void executeEqu(Line parsedLine) {
         int value;
         try {
             value = Integer.parseInt(parsedLine.getOperand());
             //This will put in SymTable the label with its value not with the address
-            SymTab.getInstance().put(parsedLine.getLabel(),Integer.parseInt(parsedLine.getOperand()));
+            SymTab.getInstance().put(parsedLine.getLabel(), Integer.parseInt(parsedLine.getOperand()));
         } catch (NumberFormatException ex) {
-            if(SymTab.getInstance().containsKey(parsedLine.getOperand()))
+            if (isExpression(parsedLine.getOperand()))
                 try {
-                    SymTab.getInstance().put(parsedLine.getLabel(),SymTab.getInstance().get(parsedLine.getOperand()));
+                    SymTab.getInstance().put(parsedLine.getLabel(),Integer.parseInt(evalExpression(parsedLine.getOperand())));
                 } catch (DuplicateLabelException e) {
                     e.printStackTrace();
                 }
-
+            if (SymTab.getInstance().containsKey(parsedLine.getOperand()))
+                try {
+                    SymTab.getInstance().put(parsedLine.getLabel(), SymTab.getInstance().get(parsedLine.getOperand()));
+                } catch (DuplicateLabelException e) {
+                    e.printStackTrace();
+                }
         } catch (DuplicateLabelException e) {
             e.printStackTrace();
         }

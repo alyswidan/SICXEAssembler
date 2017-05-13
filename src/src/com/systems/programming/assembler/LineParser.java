@@ -6,14 +6,15 @@ import com.systems.programming.assembler.ParseTree.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Mohamed Mahmoud on 3/26/2017.
  */
 
 public class LineParser {
-    public enum Mode{DEEP,SHALLOW};
+    public enum Mode {DEEP, SHALLOW}
+
+    ;
     private static LineParser instance;
     private String start;
     private int base = 0, currentLocation;
@@ -50,16 +51,15 @@ public class LineParser {
             node = getNextNode(node, tokenList.get(i));
         }
 
-        if(mode.equals(Mode.SHALLOW))
+        if (mode.equals(Mode.SHALLOW))
             return shallowParse(parsedLine);
         else
             return deepParse(parsedLine);
     }
 
-    private Line deepParse(Line parsedLine) throws AssemblerException
-    {
+    private Line deepParse(Line parsedLine) throws AssemblerException {
         ObjectCode code = new ObjectCode();
-        path.forEach(n->{
+        path.forEach(n -> {
 
             if (n instanceof LabelNode) parsedLine.setLabel(n.getState("label"));
 
@@ -73,18 +73,15 @@ public class LineParser {
                 code.setArg1(Integer.parseInt(n.getState("arg")));
                 parsedLine.setOperand(n.getState("operand"));
             }
-            if(n instanceof DoubleArgsNode)
-            {
+            if (n instanceof DoubleArgsNode) {
                 code.setArg1(Integer.parseInt(n.getState("arg1")));
                 code.setArg2(Integer.parseInt(n.getState("arg2")));
             }
-            if (n instanceof DirectiveNode)
-            {
+            if (n instanceof DirectiveNode) {
                 parsedLine.setMnemonic(n.getState("directive"));
                 code.setDirective(true);
             }
-            if(n instanceof DirectiveArgNode)
-            {
+            if (n instanceof DirectiveArgNode) {
                 parsedLine.setOperand(n.getState("arg"));
 
                 code.setOpcode(n.getState("objectCode"));
@@ -94,8 +91,8 @@ public class LineParser {
         return parsedLine;
 
 
-
     }
+
     private Line shallowParse(Line parsedLine) throws UndefinedMnemonicException {
 
         DirectiveResolver dr = DirectiveResolver.getInstance();
@@ -109,19 +106,19 @@ public class LineParser {
         });
 
         //special treatment for those as their effect appears in pass1
-        if(parsedLine.isStart())
+        if (parsedLine.isStart())
             Assembler.setProgName(parsedLine.getLabel());
 
-        if(parsedLine.isEqu())
+        if (parsedLine.isEqu())
             dr.executeEqu(parsedLine);
 
-        if(dr.isDirective(parsedLine.getMnemonic()) && dr.isExpression(parsedLine.getOperand()))
+        if (dr.isDirective(parsedLine.getMnemonic()) && dr.isExpression(parsedLine.getOperand()))
             parsedLine.setOperand(dr.evalExpression(parsedLine.getOperand()));
 
-        if(parsedLine.getMnemonic().equalsIgnoreCase("extref"))
+        if (parsedLine.getMnemonic().equalsIgnoreCase("extref"))
             dr.executeExtRef(parsedLine.getOperand());
 
-        if(parsedLine.getMnemonic().equalsIgnoreCase("org"))
+        if (parsedLine.getMnemonic().equalsIgnoreCase("org"))
             dr.executeOrg(parsedLine.getOperand());
 
         return parsedLine;
@@ -134,7 +131,9 @@ public class LineParser {
         return node;
     }
 
-    public void deactivateBase() {base=-1;}
+    public void deactivateBase() {
+        base = -1;
+    }
 
     public boolean isBaseActivated() {
         return base > 0;
