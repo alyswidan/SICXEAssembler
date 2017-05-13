@@ -50,13 +50,7 @@ public class Pass1 {
 
             }
 
-            //write the symbolTable
-            symTableWrite.println("====================================");
-            symTableWrite.printf("|%10s%5c%10s%10c\n", "Symbol", '|', "address", '|');
-            symTableWrite.println("====================================");
-            SymTab.getInstance().getTable().forEach((k, v) -> symTableWrite.printf("|%10s%5c%10x%10c\n", k, '|', v, '|'));
-            symTableWrite.println("====================================");
-
+            System.out.println(SymTab.getInstance());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

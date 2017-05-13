@@ -2,8 +2,8 @@
 0000          FIRST            LDB             #1               
 0003          CLOOP          +JSUB          RDREC               
 0007                           LDA         LENGTH               
-000a                          COMP             #0               
-000d                           JEQ          CLOOP               
+000A                          COMP             #0               
+000D                           JEQ          CLOOP               
 0010                           LDT        #LENGTH               
 0013                          SUBR            B,T               
 0015                         +JSUB         CMPREC               
@@ -11,20 +11,20 @@
 .
 .SUBROUTINEREADRECORD
 .
-001c          RDREC          CLEAR              X               
-001e                         CLEAR              A               
+001C          RDREC          CLEAR              X               
+001E                         CLEAR              A               
 0020                         CLEAR              S               
 0022                          +LDT          #4096               
 0026          RLOOP             TD          INPUT               
 0029                           JEQ          RLOOP               
-002c                            RD          INPUT               
-002f                         COMPR            A,S               
+002C                            RD          INPUT               
+002F                         COMPR            A,S               
 0031                           JEQ          EXIT1               
 0034                          STCH       BUFFER,X               
 0037                          TIXR              T               
 0039                           JLT          RLOOP               
-003c          EXIT1            STX         LENGTH               
-003f                          RSUB                              
+003C          EXIT1            STX         LENGTH               
+003F                          RSUB                              
 .
 .SUBROUTINECOMPARERECORD
 .
@@ -32,18 +32,18 @@
 0044                         COMPR            X,T               
 0046                           JEQ          EXIT2               
 0049                           JGT          EXIT2               
-004c                           LDA       BUFFER,X               
-004f                           LDS       BUFFER,X               
+004C                           LDA       BUFFER,X               
+004F                           LDS       BUFFER,X               
 0052                          SUBR            B,T               
 0054                          ADDR            B,X               
 0056                         COMPR            A,S               
 0058                           JEQ         CMPREC               
-005b                           JLT          ERROR               
-005e                           JGT          ERROR               
+005B                           JLT          ERROR               
+005E                           JGT          ERROR               
 0061          EXIT2            LDA             #1               
 0064                           STA         RESULT               
 0067          INPUT           BYTE             12               
 0068          ERROR           RSUB                              
-006b         RESULT           RESW              1               
-006e         BUFFER           RESB           4096               
-106e                           END          FIRST               
+006B         RESULT           RESW              1               
+006E         BUFFER           RESB           4096               
+106E                           END          FIRST               

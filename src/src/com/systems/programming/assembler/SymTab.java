@@ -2,6 +2,7 @@ package com.systems.programming.assembler;
 
 import com.systems.programming.assembler.Exceptions.DuplicateLabelException;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,9 +11,10 @@ import java.util.Map;
  */
 public class SymTab {
 
+    public enum Type {RELATIVE,ABSOLUTE};
     private static SymTab ourInstance = new SymTab();
     //made the address in the table map string to make it hexadecimal
-    private Map<String, Integer> table = new HashMap<>();
+    private Map<String, Attributes> table = new HashMap<>();
 
     private SymTab() {
     }
@@ -26,23 +28,79 @@ public class SymTab {
     }
 
     public Integer get(String label) {
-        return table.get(label);
+        return table.get(label).getVal();
+    }
+    public Type getType(String label){
+        return table.get(label).getType();
+    }
+    public String getCSect(String label)
+    {
+        return table.get(label).getcSect();
     }
 
     public Integer put(String label, Integer address) throws DuplicateLabelException {
-
-        
         if (containsKey(label)) throw new DuplicateLabelException();
-        return table.put(label, address);
+        table.put(label,new Attributes(address));
+        return address;
+    }
+    //adds whole entery to table
+    public void putFull(String label,int address,Type type,String cSect)throws DuplicateLabelException
+    {
+        if (containsKey(label)) throw new DuplicateLabelException();
+        table.put(label,new Attributes(address,type,cSect));
     }
 
-    public Integer remove(String label) {
-        return table.remove(label);
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        //write the symbolTable
+        builder.append("====================================\n");
+        builder.append(String.format("|%10s%5c%10s%5c%10s%5c%10s|\n", "Symbol", '|', "address", '|',"Type",'|',"CSect"));
+        builder.append("====================================\n");
+        table.forEach((k, v) -> builder.append(String.format("|%10s%5c%10X%5c%10s%5c%10s|\n",
+                            k, '|', v.getVal(), '|',v.getType(),'|',v.getcSect())));
+        builder.append("====================================");
+        return builder.toString();
     }
 
-    public Map<String, Integer> getTable() {
-        return table;
+    private static class Attributes
+    {
+        private int val;
+        private String cSect;
+        private Type type;
+
+        public Attributes(int va, Type type,String cSect) {
+            this.val = val;
+            this.cSect = cSect;
+            this.type = type;
+        }
+
+        public Attributes(int val) {
+            this.val = val;
+        }
+
+        public void setVal(int val) {
+            this.val = val;
+        }
+
+        public void setcSect(String cSect) {
+            this.cSect = cSect;
+        }
+
+        public void setType(Type type) {
+            this.type = type;
+        }
+
+        public int getVal() {
+            return val;
+        }
+
+        public String getcSect() {
+            return cSect;
+        }
+
+        public Type getType() {
+            return type;
+        }
     }
-
-
 }

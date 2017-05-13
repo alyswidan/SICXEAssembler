@@ -74,7 +74,7 @@ public class DeepParsingTest {
                 a.add(new Object[]{parsedLine,OCode.toLowerCase()});
             }
         }
-        System.out.println(SymTab.getInstance().getTable().toString());
+        //System.out.println(SymTab.getInstance().getTable().toString());
         return a;
     }
 
