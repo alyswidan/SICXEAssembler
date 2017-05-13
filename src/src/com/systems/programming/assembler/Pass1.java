@@ -28,10 +28,7 @@ public class Pass1 {
                    if(parsedLine.isAssemblerExecutable())
                        parsedLine.execute();
 
-                    if (parsedLine.getLabel() != null) {
-                        if(parsedLine.getMnemonic().equalsIgnoreCase("equ"))
-                            SymTab.getInstance().put(parsedLine.getLabel(),Integer.parseInt(parsedLine.getOperand()));
-                        else
+                    if (parsedLine.getLabel() != null && !parsedLine.isEqu()) {
                             SymTab.getInstance().put(parsedLine.getLabel(), Assembler.getLocationCounter());
                     }
 

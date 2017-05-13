@@ -99,6 +99,10 @@ public class Line {
             start = this.getOperand();
         return mnemonic.equalsIgnoreCase("start");
     }
+    public boolean isEqu() {
+        return mnemonic.equalsIgnoreCase("equ");
+    }
+
 
     public boolean isEnd() {
         return mnemonic.equalsIgnoreCase("end");

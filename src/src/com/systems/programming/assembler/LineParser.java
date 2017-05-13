@@ -106,8 +106,11 @@ public class LineParser {
             if (n instanceof SingleArgNode || n instanceof DoubleArgsNode) parsedLine.setOperand(n.getState("arg"));
         });
 
+        //special treatment for those 2 as their effect appears in pass1
         if(parsedLine.isStart())
             Assembler.setProgName(parsedLine.getLabel());
+        if(parsedLine.isEqu())
+            DirectiveResolver.getInstance().executeEqu(parsedLine.getLabel(),parsedLine.getOperand());
         return parsedLine;
     }
 

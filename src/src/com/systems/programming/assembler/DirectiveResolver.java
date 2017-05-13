@@ -1,5 +1,6 @@
 package com.systems.programming.assembler;
 
+import com.systems.programming.assembler.Exceptions.InvalidExpressionException;
 import com.systems.programming.assembler.Exceptions.UndefinedMnemonicException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +19,7 @@ public class DirectiveResolver {
     private static String startAddress;
     private String directives[] = {"word", "byte", "resb", "resw", "base", "start", "end", "nobase","org","equ","csect"};
     private String hasNoObjectCode[] = {"end", "start", "base", "nobase", "ltorg","equ","org","csect"};
+    private String operators[] = {"+","-","*","/"};
     private Map<String, Method> handlers = new HashMap<>(13);
     private DirectiveResolver() {
 
@@ -66,6 +68,9 @@ public class DirectiveResolver {
 
     public ObjectCode getObjectCode(String mnemonic, String operand) {
         ObjectCode ans = null;
+        if(isExpression(operand))
+            operand = String.valueOf(evalExpression(operand));
+
         if (mnemonic.equalsIgnoreCase("byte")) ans = parseByte(operand);
         else if (mnemonic.equalsIgnoreCase("word")) ans = parseWord(operand);
         else if (mnemonic.equalsIgnoreCase("resb")) ans = parseResb(operand);
@@ -88,7 +93,6 @@ public class DirectiveResolver {
     private void executeOrg(String operand) {
         Assembler.setLocationCounter(Integer.parseInt(operand));
     }
-
 
     private void executeEnd(String operand) {
         Assembler.setProgramLength(Assembler.getLocationCounter() - Integer.parseInt(startAddress,16));
@@ -159,6 +163,21 @@ public class DirectiveResolver {
         return o;
     }
 
+    // TODO: 13/05/17 evaluate an expression get its type and check if it is an expression
+    private int evalExpression(String expr)
+    {
+        return 0;
+    }
+    private SymTab.Type getExpressionType(String expr) throws InvalidExpressionException
+    {
+        return SymTab.Type.ABSOLUTE;
+    }
+
+    private boolean isExpression(String expr)
+    {
+        return Arrays.stream(operators).anyMatch(expr::equals);
+    }
+
     public void executeStart(String operand)
     {
 
@@ -178,5 +197,7 @@ public class DirectiveResolver {
         LineParser.getInstance().deactivateBase();
     }
 
+    public void executeEqu(String label,String operand)
+    {}
 
 }
