@@ -110,11 +110,13 @@ public class LineParser {
         //special treatment for those 2 as their effect appears in pass1
         if(parsedLine.isStart())
             Assembler.setProgName(parsedLine.getLabel());
+
         if(parsedLine.isEqu())
             DirectiveResolver.getInstance().executeEqu(parsedLine);
+
         if(DirectiveResolver.getInstance().isDirective(parsedLine.getMnemonic())
                 && DirectiveResolver.getInstance().isExpression(parsedLine.getOperand()))
-            parsedLine.setOperand(DirectiveResolver.getInstance().executeExpression(parsedLine.getOperand()));
+            parsedLine.setOperand(DirectiveResolver.getInstance().evalExpression(parsedLine.getOperand()));
         return parsedLine;
     }
 

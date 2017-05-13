@@ -73,7 +73,7 @@ public class SymTab {
         private String cSect;
         private Type type;
 
-        public Attributes(int va, Type type,String cSect) {
+        public Attributes(int val, Type type,String cSect) {
             this.val = val;
             this.cSect = cSect;
             this.type = type;

@@ -163,11 +163,11 @@ public class DirectiveResolver {
     }
 
     // TODO: 13/05/17 evaluate an expression get its type and check if it is an expression
-    private int evalExpression(String expr)
+    public String evalExpression(String expr)
     {
-        return 0;
+        return null;
     }
-    private SymTab.Type getExpressionType(String expr) throws InvalidExpressionException
+    public SymTab.Type getExpressionType(String expr) throws InvalidExpressionException
     {
         return SymTab.Type.ABSOLUTE;
     }
@@ -177,9 +177,10 @@ public class DirectiveResolver {
         return Arrays.stream(operators).anyMatch(expr::equals);
     }
 
+
+
     public void executeStart(String operand)
     {
-
         Assembler.setLocationCounter(Integer.parseInt(operand, 16));
     }
 
@@ -188,13 +189,13 @@ public class DirectiveResolver {
         {
             LineParser.getInstance().setBase(Integer.parseInt(operand));
         }
-
-        // TODO: 4/20/2017 check if operand of base is hex or no
     }
+
 
     public void executeNoBase() {
         LineParser.getInstance().deactivateBase();
     }
+
 
     // TODO: 13/05/17 this should add the label to the sym table evaluate the operand if it is an expr and replace expression with its value in the intermediate file
     public void executeEqu(Line parsedLine)
@@ -217,10 +218,7 @@ public class DirectiveResolver {
         }
     }
 
-    public String executeExpression(String expression) {
 
-        return null;
-    }
 }
 
 
