@@ -16,14 +16,14 @@ import java.util.regex.Pattern;
 public class DirectiveResolver {
     private static DirectiveResolver ourInstance;
     private static String startAddress;
-    private String directives[] = {"word", "byte", "resb", "resw", "base", "start", "end", "nobase"};
-    private String hasNoObjectCode[] = {"end", "start", "base", "nobase", "ltorg"};
+    private String directives[] = {"word", "byte", "resb", "resw", "base", "start", "end", "nobase","org","equ","csect"};
+    private String hasNoObjectCode[] = {"end", "start", "base", "nobase", "ltorg","equ","org","csect"};
     private Map<String, Method> handlers = new HashMap<>(13);
-
     private DirectiveResolver() {
 
 
         try {
+
             handlers.put("start", getClass().getMethod("executeStart", String.class));
             handlers.put("base", getClass().getMethod("executeBase", String.class));
             handlers.put("nobase", getClass().getMethod("executeNoBase"));
@@ -82,7 +82,13 @@ public class DirectiveResolver {
         else if(mnemonic.equalsIgnoreCase("base"))executeBase(operand);
         else if(mnemonic.equalsIgnoreCase("nobase"))executeNoBase();
         else if(mnemonic.equalsIgnoreCase("end"))executeEnd(operand);
+        else if(mnemonic.equalsIgnoreCase("org"))executeOrg(operand);
     }
+
+    // TODO: 13/05/17 implement this to handle org
+    private void executeOrg(String operand) {
+    }
+
 
     private void executeEnd(String operand) {
         Assembler.setProgramLength(Assembler.getLocationCounter() - Integer.parseInt(startAddress,16));

@@ -16,8 +16,7 @@ public class SymTab {
     //made the address in the table map string to make it hexadecimal
     private Map<String, Attributes> table = new HashMap<>();
 
-    private SymTab() {
-    }
+    private SymTab() {}
 
     public static SymTab getInstance() {
         return ourInstance;
@@ -49,6 +48,7 @@ public class SymTab {
         if (containsKey(label)) throw new DuplicateLabelException();
         table.put(label,new Attributes(address,type,cSect));
     }
+
 
     @Override
     public String toString() {
