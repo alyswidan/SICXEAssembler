@@ -1,4 +1,18 @@
 ====================================
-|    Symbol    |   address         |
+|    Symbol    |   address    |      Type    |     CSect|
 ====================================
+|     EXIT2    |        61    |  ABSOLUTE    |    PALIND|
+|     INPUT    |        67    |  ABSOLUTE    |    PALIND|
+|     EXIT1    |        3C    |  ABSOLUTE    |    PALIND|
+|    LENGTH    |        19    |  ABSOLUTE    |    PALIND|
+|     FIRST    |         0    |  ABSOLUTE    |    PALIND|
+|    BUFFER    |        6E    |  ABSOLUTE    |    PALIND|
+|     RLOOP    |        26    |  ABSOLUTE    |    PALIND|
+|     CLOOP    |         3    |  ABSOLUTE    |    PALIND|
+|    equals    |         9    |  ABSOLUTE    |    PALIND|
+|     ERROR    |        68    |  ABSOLUTE    |    PALIND|
+|     RDREC    |        1C    |  ABSOLUTE    |    PALIND|
+|    CMPREC    |        42    |  ABSOLUTE    |    PALIND|
+|    RESULT    |        6B    |  ABSOLUTE    |    PALIND|
+|    PALIND    |         0    |  ABSOLUTE    |    PALIND|
 ====================================

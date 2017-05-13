@@ -31,7 +31,8 @@ public class Pass1 {
                     if (parsedLine.getLabel() != null) {
                         if(parsedLine.getMnemonic().equalsIgnoreCase("equ"))
                             SymTab.getInstance().put(parsedLine.getLabel(),Integer.parseInt(parsedLine.getOperand()));
-                        SymTab.getInstance().put(parsedLine.getLabel(), Assembler.getLocationCounter());
+                        else
+                            SymTab.getInstance().put(parsedLine.getLabel(), Assembler.getLocationCounter());
                     }
 
                     if (parsedLine.isComment()) intermediateFileWrite.println(parsedLine.getComment());
@@ -52,7 +53,7 @@ public class Pass1 {
 
             }
 
-            System.out.println(SymTab.getInstance());
+            symTableWrite.println(SymTab.getInstance());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -85,8 +85,8 @@ public class DirectiveResolver {
         else if(mnemonic.equalsIgnoreCase("org"))executeOrg(operand);
     }
 
-    // TODO: 13/05/17 implement this to handle org
     private void executeOrg(String operand) {
+        Assembler.setLocationCounter(Integer.parseInt(operand));
     }
 
 

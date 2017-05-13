@@ -47,4 +47,5 @@ INPUT    BYTE    12
 ERROR    RSUB
 RESULT   RESW    1
 BUFFER   RESB    4096
+equals	 equ	 9
          END     FIRST

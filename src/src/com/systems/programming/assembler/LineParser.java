@@ -106,6 +106,8 @@ public class LineParser {
             if (n instanceof SingleArgNode || n instanceof DoubleArgsNode) parsedLine.setOperand(n.getState("arg"));
         });
 
+        if(parsedLine.isStart())
+            Assembler.setProgName(parsedLine.getLabel());
         return parsedLine;
     }
 

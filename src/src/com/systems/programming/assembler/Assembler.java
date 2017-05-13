@@ -13,6 +13,7 @@ public class Assembler {
     private static String intermediatePath = "Intermediate.txt";
     private static String HTMEPath = "HTME Record.txt";
     private static String SymTablePath = "SymTable.txt";
+    private static String progName;
 
 
     public static void main(String[] args) {
@@ -83,5 +84,13 @@ public class Assembler {
 
     public static void setSymTablePath(String symTablePath) {
         SymTablePath = symTablePath;
+    }
+
+    public static String getProgName() {
+        return progName;
+    }
+
+    public static void setProgName(String progName) {
+        Assembler.progName = progName;
     }
 }

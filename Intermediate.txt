@@ -46,4 +46,5 @@
 0068          ERROR           RSUB                              
 006B         RESULT           RESW              1               
 006E         BUFFER           RESB           4096               
+106E         equals            equ              9               
 106E                           END          FIRST               

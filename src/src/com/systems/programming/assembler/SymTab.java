@@ -29,6 +29,7 @@ public class SymTab {
     public Integer get(String label) {
         return table.get(label).getVal();
     }
+
     public Type getType(String label){
         return table.get(label).getType();
     }
@@ -39,7 +40,10 @@ public class SymTab {
 
     public Integer put(String label, Integer address) throws DuplicateLabelException {
         if (containsKey(label)) throw new DuplicateLabelException();
-        table.put(label,new Attributes(address));
+        Attributes attr = new Attributes(address);
+        attr.setType(Type.ABSOLUTE);
+        attr.setcSect(Assembler.getProgName());
+        table.put(label,attr);
         return address;
     }
     //adds whole entery to table
