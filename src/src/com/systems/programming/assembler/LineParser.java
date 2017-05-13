@@ -110,7 +110,7 @@ public class LineParser {
         if(parsedLine.isStart())
             Assembler.setProgName(parsedLine.getLabel());
         if(parsedLine.isEqu())
-            DirectiveResolver.getInstance().executeEqu(parsedLine.getLabel(),parsedLine.getOperand());
+            DirectiveResolver.getInstance().executeEqu(parsedLine);
         return parsedLine;
     }
 

@@ -197,7 +197,10 @@ public class DirectiveResolver {
         LineParser.getInstance().deactivateBase();
     }
 
-    public void executeEqu(String label,String operand)
-    {}
+    // TODO: 13/05/17 this should add the label to the sym table evaluate the operand if it is an expr and replace expression with its value in the intermediate file
+    public void executeEqu(Line parsedLine)
+    {
+
+    }
 
 }
