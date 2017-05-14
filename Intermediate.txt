@@ -49,5 +49,6 @@
 0411         RESULT           RESW              1               
 0414         BUFFER           RESB           4096               
 1414          ZZZZZ           word           1006               
-1417         equals            equ              0               
+equals	 equ	 klm-RLOOP
+**Error^^:InvalidExpressionException
 1417                           END          FIRST               

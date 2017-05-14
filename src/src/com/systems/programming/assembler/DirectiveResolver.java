@@ -245,7 +245,6 @@ public class DirectiveResolver {
         }
     }
 
-
     public void executeNoBase() {
         LineParser.getInstance().deactivateBase();
     }

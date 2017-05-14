@@ -42,7 +42,6 @@ public class Pass1 {
                         Assembler.IncrementLocationCounterBy(parsedLine.getLength());
                     }
 
-
                 } catch (AssemblerException e) {
                     intermediateFileWrite.println(line.trim());
                     e.printStackTrace();

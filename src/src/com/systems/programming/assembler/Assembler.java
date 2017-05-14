@@ -16,7 +16,7 @@ public class Assembler {
     private static String HTMEPath = "HTME Record.txt";
     private static String SymTablePath = "SymTable.txt";
     private static String progName;
-    private static List<String>extDefs = new ArrayList<>();
+    private static List<String>extRefs = new ArrayList<>();
 
 
     public static void main(String[] args) {
@@ -25,7 +25,7 @@ public class Assembler {
         Pass2.execute();
     }
 
-    public static void addExtDef(String def)
+    public static void addExtRef(String ref)
     {
 
     }

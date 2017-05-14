@@ -12,7 +12,6 @@
 |    BUFFER    |       414    |  RELATIVE    |    PALIND|
 |     RLOOP    |        26    |  RELATIVE    |    PALIND|
 |     CLOOP    |         3    |  RELATIVE    |    PALIND|
-|    equals    |         0    |  ABSOLUTE    |    PALIND|
 |       xyz    |         0    |  RELATIVE    |     other|
 |     ERROR    |       40E    |  RELATIVE    |    PALIND|
 |     RDREC    |        1C    |  RELATIVE    |    PALIND|
