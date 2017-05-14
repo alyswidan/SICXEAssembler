@@ -192,7 +192,7 @@ public class DirectiveResolver {
         return res;
     }
 
-    private List<String> tokenizeExpression(String operand) {
+    public List<String> tokenizeExpression(String operand) {
         List<String> tokens = new ArrayList<>();
         Pattern p = Pattern.compile("([+-])|([a-zA-Z]+)|(\\d+)");
         Matcher m = p.matcher(operand);
