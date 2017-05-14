@@ -1,6 +1,7 @@
 package com.systems.programming.assembler.ParseTree;
 
 import com.systems.programming.assembler.Assembler;
+import com.systems.programming.assembler.DirectiveResolver;
 import com.systems.programming.assembler.Exceptions.AssemblerException;
 import com.systems.programming.assembler.Exceptions.DisplacementOutOfBoundException;
 import com.systems.programming.assembler.Exceptions.UndefinedLabelException;
@@ -33,6 +34,8 @@ public class SingleArgNode extends ParseNode {
     }
 
     public int getDisplacement() throws AssemblerException {
+        if(DirectiveResolver.getInstance().isPass1(getState("directive")))
+            return 0;
         int disp;
         String clean = getCleanArg(arg);
         /*System.out.println("clean arg is " + clean + " at instruction "

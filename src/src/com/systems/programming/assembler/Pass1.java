@@ -29,7 +29,7 @@ public class Pass1 {
                        parsedLine.execute();
 
                     if (parsedLine.getLabel() != null && !parsedLine.isEqu()) {
-                            SymTab.getInstance().put(parsedLine.getLabel(), Assembler.getLocationCounter());
+                            SymTab.getInstance().putFull(parsedLine.getLabel(), Assembler.getLocationCounter(), SymTab.Type.RELATIVE,Assembler.getProgName());
                     }
 
                     if (parsedLine.isComment()) intermediateFileWrite.println(parsedLine.getComment());
@@ -45,6 +45,7 @@ public class Pass1 {
 
                 } catch (AssemblerException e) {
                     intermediateFileWrite.println(line.trim());
+                    e.printStackTrace();
                     intermediateFileWrite.println("**Error^^:" + e.getClass().getSimpleName());
                 }
 

@@ -18,6 +18,7 @@ public class Pass2 {
 
     public static void execute() {
         Assembler.init();
+        System.out.println("==========pass2===========");
 
         try (BufferedReader sourceReader = new BufferedReader(new FileReader(Assembler.getIntermediatePath()));
              PrintWriter HTMEWriter = new PrintWriter(new FileWriter(Assembler.getHTMEPath()))) {
@@ -27,6 +28,7 @@ public class Pass2 {
             List<Line> MRecords = new ArrayList<>();
             List<Line> currentTRecord = new ArrayList<>();
             while ((line = sourceReader.readLine()) != null) {
+                System.out.println("line = " + line);
                 String address = line.split("\\s+")[0];
                 line = Arrays.stream(line.split("\\s+")).skip(1).collect(Collectors.joining("  "));
                 int xx = Assembler.getLocationCounter();

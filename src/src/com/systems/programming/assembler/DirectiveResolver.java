@@ -16,8 +16,11 @@ public class DirectiveResolver {
     private static DirectiveResolver ourInstance;
     private static String startAddress;
     private String directives[] = {"word", "byte", "resb", "resw", "base",
-            "start", "end", "nobase", "org", "equ", "csect", "extref"};
-    private String hasNoObjectCode[] = {"end", "start", "base", "nobase", "ltorg", "equ", "org", "csect"};
+                                    "start", "end", "nobase", "org", "equ",
+                                    "csect", "extref"};
+    private String hasNoObjectCode[] = {"end", "start", "base", "nobase",
+                                        "ltorg", "equ", "org", "csect"};
+    private String isPass1[] = {"extref","equ"};
     private Map<String, Method> handlers = new HashMap<>(13);
 
     private DirectiveResolver() {
@@ -36,6 +39,9 @@ public class DirectiveResolver {
             e.printStackTrace();
         }
 
+    }
+    public boolean isPass1(String dir){
+        return isDirective(dir) && Stream.of(isPass1).anyMatch(dir::equalsIgnoreCase);
     }
 
     public static DirectiveResolver getInstance() {
@@ -166,7 +172,7 @@ public class DirectiveResolver {
     }
 
     // TODO: 13/05/17 evaluate an expression get its type and check if it is an expression
-    public String evalExpression(String operand) {
+    public int evalExpression(String operand) {
         SymTab symTab = SymTab.getInstance();
         int res = 0;
         String prev = null;
@@ -176,22 +182,20 @@ public class DirectiveResolver {
                 prev = curr;
                 continue;
             }
-
             int sign = prev == null || prev.equals("+") ? 1 : -1;
-            if (curr.matches("//d+"))
+            if (curr.matches("[0-9]+")) {
                 res += sign * Integer.parseInt(curr);
-            else
+            } else
                 res += sign * symTab.get(curr);
             prev = curr;
         }
-        return String.valueOf(res);
+        return res;
     }
 
     private List<String> tokenizeExpression(String operand) {
         List<String> tokens = new ArrayList<>();
         Pattern p = Pattern.compile("([+-])|([a-zA-Z]+)|(\\d+)");
         Matcher m = p.matcher(operand);
-        System.out.println("operand = " + operand);
         while (m.find())
             tokens.add(m.group(0));
 
@@ -200,11 +204,12 @@ public class DirectiveResolver {
 
     public SymTab.Type getExpressionType(String operand) throws InvalidExpressionException {
         SymTab symTab = SymTab.getInstance();
+        if(operand.matches("\\d+"))return SymTab.Type.ABSOLUTE;
+        if(operand.matches("[a-zA-z]+"))return SymTab.Type.RELATIVE;
         int freq[] = new int[2];
         String prev = null;
         List<String> tokens = tokenizeExpression(operand);
         for (String curr : tokens) {
-            System.out.println("curr = " + curr);
             if (curr.equals("+")
                     || curr.equals("-")
                     || !symTab.containsKey(curr)
@@ -215,11 +220,15 @@ public class DirectiveResolver {
                 freq[symTab.getCSect(curr).equals(Assembler.getProgName()) ? 0 : 1]--;
             prev = curr;
         }
+        System.out.println(operand+"->"+freq[0]+","+freq[1]);
+        if (freq[0] != 1 && freq[0] != 0 || freq[1] != 1 && freq[1] != 0)
+            throw new InvalidExpressionException();
         if (freq[0] == freq[1] && freq[0] == 0)
             return SymTab.Type.ABSOLUTE;
-        else if (freq[0] != freq[1] && (freq[1] == 1 || freq[0] == 1))
+        else if (freq[0] != freq[1])
             return SymTab.Type.RELATIVE;
         else throw new InvalidExpressionException();
+
     }
 
     public boolean isExpression(String expr) {
@@ -244,7 +253,7 @@ public class DirectiveResolver {
     public void executeExtRef(String operands) {
         Stream.of(operands.split(",")).forEach(ref -> {
             try {
-                SymTab.getInstance().put(ref, 0);
+                SymTab.getInstance().putFull(ref, 0, SymTab.Type.RELATIVE,"other");
             } catch (DuplicateLabelException e) {
                 e.printStackTrace();
             }
@@ -252,26 +261,12 @@ public class DirectiveResolver {
     }
 
     // TODO: 13/05/17 this should add the label to the sym table evaluate the operand if it is an expr and replace expression with its value in the intermediate file
-    public void executeEqu(Line parsedLine) {
-        int value;
-        try {
-            value = Integer.parseInt(parsedLine.getOperand());
-            //This will put in SymTable the label with its value not with the address
-            SymTab.getInstance().put(parsedLine.getLabel(), Integer.parseInt(parsedLine.getOperand()));
-        } catch (NumberFormatException ex) {
-            if (SymTab.getInstance().containsKey(parsedLine.getOperand()))
-                try {
-                    SymTab.getInstance().put(parsedLine.getLabel(), SymTab.getInstance().get(parsedLine.getOperand()));
-                } catch (DuplicateLabelException e) {
-                    e.printStackTrace();
-                }
-
-        } catch (DuplicateLabelException e) {
-            e.printStackTrace();
-        }
+    public void executeEqu(Line parsedLine) throws InvalidExpressionException, DuplicateLabelException {
+        String label = parsedLine.getLabel(), operand = parsedLine.getOperand();
+        SymTab.Type type = getExpressionType(operand);
+        SymTab.getInstance().putFull(label, evalExpression(operand),type,Assembler.getProgName());
+        System.out.println(label+"->type = " + type);
     }
-
-
 }
 
 

@@ -1,4 +1,5 @@
 PALIND   START   0
+extref	 xyz,klm,ioi
 FIRST    LDB     #1
 CLOOP    +JSUB   RDREC
          LDA     LENGTH
@@ -28,6 +29,7 @@ EXIT1    STX     LENGTH
 .
 . SUBROUTINE COMPARE RECORD
 .
+	     org	 1000
 CMPREC   CLEAR   A
          COMPR   X,T
          JEQ     EXIT2
@@ -47,5 +49,6 @@ INPUT    BYTE    12
 ERROR    RSUB
 RESULT   RESW    1
 BUFFER   RESB    4096
-equals	 equ	 9
+ZZZZZ	 word    BUFFER-RLOOP
+equals	 equ	 klm-ioi
          END     FIRST

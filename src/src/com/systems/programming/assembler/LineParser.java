@@ -1,6 +1,8 @@
 package com.systems.programming.assembler;
 
 import com.systems.programming.assembler.Exceptions.AssemblerException;
+import com.systems.programming.assembler.Exceptions.DuplicateLabelException;
+import com.systems.programming.assembler.Exceptions.InvalidExpressionException;
 import com.systems.programming.assembler.Exceptions.UndefinedMnemonicException;
 import com.systems.programming.assembler.ParseTree.*;
 
@@ -93,7 +95,7 @@ public class LineParser {
 
     }
 
-    private Line shallowParse(Line parsedLine) throws UndefinedMnemonicException {
+    private Line shallowParse(Line parsedLine) throws UndefinedMnemonicException, InvalidExpressionException, DuplicateLabelException {
 
         DirectiveResolver dr = DirectiveResolver.getInstance();
         //traverse the path and get components into corresponding variables
@@ -113,7 +115,7 @@ public class LineParser {
             dr.executeEqu(parsedLine);
 
         if (dr.isDirective(parsedLine.getMnemonic()) && dr.isExpression(parsedLine.getOperand()))
-            parsedLine.setOperand(dr.evalExpression(parsedLine.getOperand()));
+            parsedLine.setOperand(String.valueOf(dr.evalExpression(parsedLine.getOperand())));
 
         if (parsedLine.getMnemonic().equalsIgnoreCase("extref"))
             dr.executeExtRef(parsedLine.getOperand());

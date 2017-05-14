@@ -27,6 +27,7 @@ public class SymTab {
     }
 
     public Integer get(String label) {
+        System.out.println("get label = " + label);
         return table.get(label).getVal();
     }
 
@@ -58,9 +59,9 @@ public class SymTab {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         //write the symbolTable
-        builder.append("====================================\n");
+        builder.append("===================================================\n");
         builder.append(String.format("|%10s%5c%10s%5c%10s%5c%10s|\n", "Symbol", '|', "address", '|',"Type",'|',"CSect"));
-        builder.append("====================================\n");
+        builder.append("====================================================\n");
         table.forEach((k, v) -> builder.append(String.format("|%10s%5c%10X%5c%10s%5c%10s|\n",
                             k, '|', v.getVal(), '|',v.getType(),'|',v.getcSect())));
         builder.append("====================================");

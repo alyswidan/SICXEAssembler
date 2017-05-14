@@ -19,9 +19,10 @@ public class DirectiveNode extends ParseNode {
         DirectiveResolver resolver = DirectiveResolver.getInstance();
         ParseNode next;
 
-        if (LineParser.getInstance().getMode().equals(LineParser.Mode.SHALLOW))
+        if(DirectiveResolver.getInstance().isPass1(getState("directive")))
             next = new SingleArgNode();
-
+        else if (LineParser.getInstance().getMode().equals(LineParser.Mode.SHALLOW))
+            next = new SingleArgNode();
         else
             next = new DirectiveArgNode();
 
