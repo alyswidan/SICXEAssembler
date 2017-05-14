@@ -43,7 +43,6 @@ public class DirectiveArgNode extends ParseNode {
                         .toString());
                 super.addState("type",DirectiveResolver.getInstance().getExpressionType(val).toString());
             }
-
         }
         else super.addState(key,val);
     }
