@@ -26,6 +26,10 @@ public class Line {
         this.argType = argType;
     }
 
+    public boolean isCSECT() {
+        return mnemonic!=null && mnemonic.equalsIgnoreCase("CSECT");
+    }
+
     public enum ArgType {IMMEDIATE,INDIRECT,DIRECT};
 
 

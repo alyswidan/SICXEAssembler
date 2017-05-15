@@ -60,14 +60,19 @@ public class Pass2 {
                     if (parsedLine.isStart())//is it a start
                         HTMEWriter.print(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
 
-                    if (parsedLine.isEnd())//is it an end
+                    if (parsedLine.isEnd() || parsedLine.isCSECT())//is it an end
                     {
                         if(currentTRecord.size()>0) {
                             HTMEWriter.print(createTRecord(currentTRecord, counter));
                         }
 
                         HTMEWriter.print(createMRecords(Assembler.getmRecords()));
-                        HTMEWriter.print(createERecord(parsedLine.getOperand()));
+
+                        if (parsedLine.isEnd()){
+                            HTMEWriter.print(createERecord(parsedLine.getOperand()));
+                            System.out.println(">>>>>>>>>>>>>>>>>>>>>" + Assembler.getmRecords());
+                        }
+
                     }
 
                 } else if (parsedLine.getObjectCode() != null && !parsedLine.getObjectCode().toString().equals("null"))/* if this is not a reserve*/ {

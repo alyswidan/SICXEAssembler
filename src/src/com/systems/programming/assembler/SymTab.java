@@ -10,6 +10,10 @@ import java.util.Map;
  */
 public class SymTab {
 
+    public void clear() {
+        table.clear();
+    }
+
     public enum Type {RELATIVE, ABSOLUTE}
 
     ;

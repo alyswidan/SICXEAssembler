@@ -32,10 +32,20 @@ public class Assembler {
         Assembler.skipper = skipper;
     }
     public static void main(String[] args) {
+        start();
+    }
+
+    public static void start(){
         init();
+        SymTab.getInstance().clear();
+        extRefs.clear();
+        extDefs.clear();
+        mRecords.clear();
+        System.out.println("===========" + mRecords);
         Pass1.execute();
         Pass2.execute();
     }
+
     public static void addExtDef(String def)
     {
         extDefs.put(def,0);

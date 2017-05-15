@@ -50,15 +50,14 @@ public class Pass1 {
                         Assembler.IncrementLocationCounterBy(parsedLine.getLength());
                     }
 
-                    /*else if (parsedLine.getMnemonic().equalsIgnoreCase("csect")){
+
+                    else if (parsedLine.isCSECT()){
+                        System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbb");
                         Assembler.setSkipper(counter + 1);
-                        //symTableWrite.println(SymTab.getInstance());
-                        Assembler.init();
-                        Assembler.setLocationCounter(Integer.parseInt(DirectiveResolver.getInstance().getStartAddress()));
-                        Pass1.execute();
-                        pass2.execute();
+                        Assembler.setLocationCounter(0);
+                        Assembler.start();
                         continue;
-                    }*/
+                    }
 
                     counter++;
 
