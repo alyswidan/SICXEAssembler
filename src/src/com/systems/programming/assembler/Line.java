@@ -17,6 +17,7 @@ public class Line {
     private int address = -1;
     private List<String> tokenList;
 
+
     public Line(String line) {
         this.line = line.trim();
         setAddress();
@@ -51,6 +52,7 @@ public class Line {
 
     public void setMnemonic(String mnemonic) {
         this.mnemonic = mnemonic;
+
     }
 
     public String getOperand() {

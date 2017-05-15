@@ -202,6 +202,25 @@ public class DirectiveResolver {
         return tokens;
     }
 
+
+    public List<MRecord> getMrecords(String operand)
+    {
+        List<MRecord>recs = new ArrayList<>();
+        SymTab symTab = SymTab.getInstance();
+        String prev = null;
+        List<String> tokens = tokenizeExpression(operand);
+        for (String curr : tokens) {
+            char sign = prev==null||prev.equals("+")?'+':'-';
+            if (curr.matches("[a-zA-Z]+")) {
+                recs.add(new MRecord(sign,6,
+                                symTab.getCSect(curr).equals(Assembler.getProgName())?curr
+                                                                        :Assembler.getProgName()));
+            }
+            prev = curr;
+        }
+        return recs;
+    }
+
     public SymTab.Type getExpressionType(String operand) throws InvalidExpressionException {
         SymTab symTab = SymTab.getInstance();
         if(operand.matches("\\d+"))return SymTab.Type.ABSOLUTE;

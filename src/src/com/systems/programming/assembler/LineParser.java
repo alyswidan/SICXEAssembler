@@ -114,8 +114,17 @@ public class LineParser {
         if (parsedLine.isEqu())
             dr.executeEqu(parsedLine);
 
-        if (dr.isDirective(parsedLine.getMnemonic()) && dr.isExpression(parsedLine.getOperand()))
+        // TODO: 15/05/17 this is not correct we need and should be done in pass 2 as it is done 
+        if(OpTable.getInstance().getFormat(parsedLine.getMnemonic())==4)
+        {
+            Assembler.addMRecord(new MRecord(Assembler.getLocationCounter()+1,'+',5,Assembler.getProgName()));
+        }
+        if (dr.isDirective(parsedLine.getMnemonic()) && dr.isExpression(parsedLine.getOperand())) {
             parsedLine.setOperand(String.valueOf(dr.evalExpression(parsedLine.getOperand())));
+            List<MRecord>recs = dr.getMrecords(parsedLine.getOperand());
+            recs.forEach(mRecord -> mRecord.setAddress(Assembler.getLocationCounter()));
+            Assembler.appendMRecords(recs);
+        }
 
         if (parsedLine.getMnemonic().equalsIgnoreCase("extref"))
             dr.executeExtRef(parsedLine.getOperand());

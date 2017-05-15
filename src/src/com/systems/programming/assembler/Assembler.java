@@ -1,8 +1,7 @@
 package com.systems.programming.assembler;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by ADMIN on 4/20/2017.
@@ -16,7 +15,8 @@ public class Assembler {
     private static String HTMEPath = "HTME Record.txt";
     private static String SymTablePath = "SymTable.txt";
     private static String progName;
-    private static List<String>extRefs = new ArrayList<>();
+    private static Map<String,Integer> extDefs = new TreeMap<>();
+    private static List<MRecord> mRecords = new ArrayList<>();
 
 
     public static void main(String[] args) {
@@ -25,9 +25,14 @@ public class Assembler {
         Pass2.execute();
     }
 
-    public static void addExtRef(String ref)
+    public static void addExtDef(String def)
     {
-
+        extDefs.put(def,0);
+    }
+    public static void setExtDefAddressIfExists(String def,int address)
+    {
+        if(extDefs.containsKey(def))
+            extDefs.put(def,address);
     }
 
     public static int getLocationCounter() {
@@ -101,4 +106,11 @@ public class Assembler {
     public static void setProgName(String progName) {
         Assembler.progName = progName;
     }
+
+    public static void appendMRecords(List<MRecord>mRecords)
+    {
+        Assembler.mRecords.addAll(mRecords);
+    }
+
+    public static void addMRecord(MRecord mRecord){mRecords.add(mRecord);}
 }
