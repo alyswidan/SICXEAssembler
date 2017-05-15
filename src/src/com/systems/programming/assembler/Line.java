@@ -16,6 +16,17 @@ public class Line {
     private ObjectCode objectCode;
     private int address = -1;
     private List<String> tokenList;
+    private ArgType argType;
+
+    public ArgType getArgType() {
+        return argType;
+    }
+
+    public void setArgType(ArgType argType) {
+        this.argType = argType;
+    }
+
+    public enum ArgType {IMMEDIATE,INDIRECT,DIRECT};
 
 
     public Line(String line) {

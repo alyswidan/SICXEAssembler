@@ -4,6 +4,7 @@ import com.systems.programming.assembler.Assembler;
 import com.systems.programming.assembler.DirectiveResolver;
 import com.systems.programming.assembler.Exceptions.AssemblerException;
 import com.systems.programming.assembler.Exceptions.DisplacementOutOfBoundException;
+import com.systems.programming.assembler.Exceptions.ExternalReferanceWithFormat3Exeption;
 import com.systems.programming.assembler.Exceptions.UndefinedLabelException;
 import com.systems.programming.assembler.LineParser;
 import com.systems.programming.assembler.SymTab;
@@ -46,6 +47,9 @@ public class SingleArgNode extends ParseNode {
         } catch (NumberFormatException ex) {
             if (!SymTab.getInstance().containsKey(clean))
                 throw new UndefinedLabelException();
+            else if(getState("format").equalsIgnoreCase("3") &&
+                    SymTab.getInstance().getCSect(clean).equalsIgnoreCase("other"))
+                    throw new ExternalReferanceWithFormat3Exeption();
 
             disp = computeRelativeDisp(SymTab.getInstance().get(clean));
         }
@@ -59,6 +63,7 @@ public class SingleArgNode extends ParseNode {
             System.out.printf("-> current pc is  %X\n",(Assembler.getLocationCounter() + Integer.parseInt(getState("format"))));
             return arg;
         }
+
 
         System.out.println("is base activated = "+parser.isBaseActivated());
         //pc relative?

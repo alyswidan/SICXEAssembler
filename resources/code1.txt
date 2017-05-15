@@ -1,7 +1,8 @@
 PALIND   START   0
+extdef   RLOOP,RDREC
 extref	 xyz,klm,ioi
 FIRST    LDB     #1
-CLOOP    +JSUB   RDREC
+CLOOP    +JSUB   ioi
          LDA     LENGTH
          COMP    #0
          JEQ     CLOOP
@@ -15,7 +16,7 @@ LENGTH   RESW    1
 RDREC    CLEAR   X
          CLEAR   A
          CLEAR   S
-         +LDT    #4096
+         +LDT    klm
 RLOOP    TD      INPUT
          JEQ     RLOOP
          RD      INPUT

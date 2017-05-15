@@ -74,6 +74,12 @@ public class LineParser {
                 code.setFlags(Integer.parseInt(n.getState("flags")));
                 code.setArg1(Integer.parseInt(n.getState("arg")));
                 parsedLine.setOperand(n.getState("operand"));
+                if(n instanceof ImmediateNode)
+                    parsedLine.setArgType(Line.ArgType.IMMEDIATE);
+                else if(n instanceof IndirectNode)
+                    parsedLine.setArgType(Line.ArgType.INDIRECT);
+                else
+                    parsedLine.setArgType(Line.ArgType.DIRECT);
             }
             if (n instanceof DoubleArgsNode) {
                 code.setArg1(Integer.parseInt(n.getState("arg1")));
@@ -114,16 +120,14 @@ public class LineParser {
         if (parsedLine.isEqu())
             dr.executeEqu(parsedLine);
 
-        // TODO: 15/05/17 this is not correct we need and should be done in pass 2 as it is done 
-        if(OpTable.getInstance().getFormat(parsedLine.getMnemonic())==4)
-        {
-            Assembler.addMRecord(new MRecord(Assembler.getLocationCounter()+1,'+',5,Assembler.getProgName()));
-        }
+
         if (dr.isDirective(parsedLine.getMnemonic()) && dr.isExpression(parsedLine.getOperand())) {
-            parsedLine.setOperand(String.valueOf(dr.evalExpression(parsedLine.getOperand())));
             List<MRecord>recs = dr.getMrecords(parsedLine.getOperand());
+            System.out.println(parsedLine.getMnemonic()+" -> recs = " + recs);
             recs.forEach(mRecord -> mRecord.setAddress(Assembler.getLocationCounter()));
             Assembler.appendMRecords(recs);
+
+            parsedLine.setOperand(String.valueOf(dr.evalExpression(parsedLine.getOperand())));
         }
 
         if (parsedLine.getMnemonic().equalsIgnoreCase("extref"))
@@ -132,6 +136,10 @@ public class LineParser {
         if (parsedLine.getMnemonic().equalsIgnoreCase("org"))
             dr.executeOrg(parsedLine.getOperand());
 
+        if(parsedLine.getMnemonic().equalsIgnoreCase("extdef"))
+            dr.executeExtDef(parsedLine.getOperand());
+        if(parsedLine.getLabel()!=null)
+        Assembler.setExtDefAddressIfExists(parsedLine.getLabel(),Assembler.getLocationCounter());
         return parsedLine;
     }
 

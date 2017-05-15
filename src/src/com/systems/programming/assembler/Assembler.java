@@ -2,6 +2,8 @@ package com.systems.programming.assembler;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by ADMIN on 4/20/2017.
@@ -17,6 +19,7 @@ public class Assembler {
     private static String progName;
     private static Map<String,Integer> extDefs = new TreeMap<>();
     private static List<MRecord> mRecords = new ArrayList<>();
+    private static List<String> extRefs = new ArrayList<>();
 
 
     public static void main(String[] args) {
@@ -29,10 +32,14 @@ public class Assembler {
     {
         extDefs.put(def,0);
     }
-    public static void setExtDefAddressIfExists(String def,int address)
-    {
+    public static void setExtDefAddressIfExists(String def,int address) {
+
         if(extDefs.containsKey(def))
             extDefs.put(def,address);
+    }
+    public static String getExtDef(){
+        return extDefs.entrySet().stream()
+                .map(pair->pair.getKey()+"_"+String.format("%06X",pair.getValue())).collect(Collectors.joining("_"));
     }
 
     public static int getLocationCounter() {
@@ -113,4 +120,13 @@ public class Assembler {
     }
 
     public static void addMRecord(MRecord mRecord){mRecords.add(mRecord);}
+
+    public static List<MRecord> getmRecords() {
+        return mRecords;
+    }
+    public static void addExtRef(String ref){extRefs.add(ref);}
+
+    public static List<String> getExtRefs() {
+        return extRefs;
+    }
 }

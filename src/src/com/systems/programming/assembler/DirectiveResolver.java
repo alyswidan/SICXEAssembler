@@ -17,10 +17,10 @@ public class DirectiveResolver {
     private static String startAddress;
     private String directives[] = {"word", "byte", "resb", "resw", "base",
                                     "start", "end", "nobase", "org", "equ",
-                                    "csect", "extref"};
+                                    "csect", "extref","extdef"};
     private String hasNoObjectCode[] = {"end", "start", "base", "nobase",
                                         "ltorg", "equ", "org", "csect"};
-    private String isPass1[] = {"extref","equ"};
+    private String isPass1[] = {"extref","equ","extdef"};
     private Map<String, Method> handlers = new HashMap<>(13);
 
     private DirectiveResolver() {
@@ -90,13 +90,8 @@ public class DirectiveResolver {
         } else if (mnemonic.equalsIgnoreCase("base")) executeBase(operand);
         else if (mnemonic.equalsIgnoreCase("nobase")) executeNoBase();
         else if (mnemonic.equalsIgnoreCase("end")) executeEnd(operand);
-        else if (mnemonic.equalsIgnoreCase("extdef")) executeExtDef(operand);
     }
 
-    private void executeExtDef(String operand) {
-
-
-    }
 
     public void executeOrg(String operand) {
         Assembler.setLocationCounter(Integer.parseInt(operand));
@@ -209,9 +204,11 @@ public class DirectiveResolver {
         SymTab symTab = SymTab.getInstance();
         String prev = null;
         List<String> tokens = tokenizeExpression(operand);
+        System.out.println("the tokenized expression "+tokens);
         for (String curr : tokens) {
             char sign = prev==null||prev.equals("+")?'+':'-';
             if (curr.matches("[a-zA-Z]+")) {
+                System.out.println("a match in expression ->"+curr);
                 recs.add(new MRecord(sign,6,
                                 symTab.getCSect(curr).equals(Assembler.getProgName())?curr
                                                                         :Assembler.getProgName()));
@@ -272,10 +269,16 @@ public class DirectiveResolver {
         Stream.of(operands.split(",")).forEach(ref -> {
             try {
                 SymTab.getInstance().putFull(ref, 0, SymTab.Type.RELATIVE,"other");
+                Assembler.addExtRef(ref);
             } catch (DuplicateLabelException e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    public void executeExtDef(String operands)
+    {
+        Stream.of(operands.split(",")).forEach(Assembler::addExtDef);
     }
 
     // TODO: 13/05/17 this should add the label to the sym table evaluate the operand if it is an expr and replace expression with its value in the intermediate file

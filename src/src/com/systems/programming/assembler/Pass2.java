@@ -25,7 +25,7 @@ public class Pass2 {
             int currLine = 1;
             LineParser.getInstance().setMode(LineParser.Mode.DEEP);
             String line;
-            List<Line> MRecords = new ArrayList<>();
+            //List<Line> MRecords = new ArrayList<>();
             List<Line> currentTRecord = new ArrayList<>();
             while ((line = sourceReader.readLine()) != null) {
                 System.out.println("line = " + line);
@@ -57,7 +57,6 @@ public class Pass2 {
 
                 if (parsedLine.isAssemblerExecutable()) {//is this an executable
                     parsedLine.execute();//execute it
-
                     if (parsedLine.isStart())//is it a start
                         HTMEWriter.print(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
 
@@ -67,14 +66,14 @@ public class Pass2 {
                             HTMEWriter.print(createTRecord(currentTRecord, counter));
                         }
 
-                        HTMEWriter.print(createMRecords(MRecords));
+                        HTMEWriter.print(createMRecords(Assembler.getmRecords()));
                         HTMEWriter.print(createERecord(parsedLine.getOperand()));
                     }
 
                 } else if (parsedLine.getObjectCode() != null && !parsedLine.getObjectCode().toString().equals("null"))/* if this is not a reserve*/ {
                     int len = parsedLine.getObjectCode().toString().length()/2;
-                    if (parsedLine.getObjectCode().isFormat4()) {
-                        MRecords.add(parsedLine);
+                    if (parsedLine.getObjectCode().isFormat4() && parsedLine.getArgType() != Line.ArgType.IMMEDIATE) {
+                        Assembler.addMRecord(new MRecord());
                     }
                     if (counter + len <= 30)//if it fits in record
                     {
@@ -88,13 +87,19 @@ public class Pass2 {
                         currentTRecord.add(parsedLine);
 
                     }
-                } else {// if it is a reserve
+                }else if(parsedLine.getMnemonic().equalsIgnoreCase("extref")) {
+                    HTMEWriter.print(createRRecords());
+                }
+                else if(parsedLine.getMnemonic().equalsIgnoreCase("extdef")){
+                    HTMEWriter.print(createDRecords());
+                }else {// if it is a reserve
                     HTMEWriter.print(createTRecord(currentTRecord,counter));
                     counter = 0;
                 }
                 HTMEWriter.flush();
                 currLine++;
             }
+            System.out.println(Assembler.getExtDef());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -104,13 +109,17 @@ public class Pass2 {
         }
     }
 
-    private static String createMRecords(List<Line> mRecords) {
+    private static String createRRecords() {
+        return "R_"+Assembler.getExtRefs().stream().map(ref->String.format("%-6s",ref))
+                                    .collect(Collectors.joining("_"))+"\n";
+    }
+    private static String createDRecords() {
+        return "D_"+Assembler.getExtDef()+"\n";
+    }
 
-        return mRecords.stream()
-                .map(line -> "M" +
-                        "_" +
-                        String.format("%06X", line.getAddress() + 1) + "_05")
-                .collect(Collectors.joining("\n"))+"\n";
+    private static String createMRecords(List<MRecord> mRecords) {
+
+        return mRecords.stream().map(MRecord::toString).collect(Collectors.joining("\n"))+"\n";
     }
 
     private static String createTRecord(List<Line> currentTRecord,int len) {

@@ -1,5 +1,7 @@
 package com.systems.programming.assembler;
 
+import java.util.stream.Collectors;
+
 /**
  * Created by alyswidan on 15/05/17.
  */
@@ -14,6 +16,14 @@ public class MRecord {
         this.sign = sign;
         this.length = length;
         this.relativeTo = relativeTo;
+    }
+    public MRecord()
+    {
+
+        this.address = Assembler.getLocationCounter();
+        this.sign = '+';
+        this.length = 5;
+        this.relativeTo = Assembler.getProgName();
     }
 
     public MRecord(char sign, int length, String relativeTo) {
@@ -53,5 +63,10 @@ public class MRecord {
 
     public void setRelativeTo(String relativeTo) {
         this.relativeTo = relativeTo;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("M_%06X_%02d_%c_%s",address,length,sign,relativeTo);
     }
 }
