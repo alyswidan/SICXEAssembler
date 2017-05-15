@@ -16,11 +16,11 @@ public class DirectiveResolver {
     private static DirectiveResolver ourInstance;
     private static String startAddress;
     private String directives[] = {"word", "byte", "resb", "resw", "base",
-                                    "start", "end", "nobase", "org", "equ",
-                                    "csect", "extref","extdef"};
+            "start", "end", "nobase", "org", "equ",
+            "csect", "extref","extdef"};
     private String hasNoObjectCode[] = {"end", "start", "base", "nobase",
-                                        "ltorg", "equ", "org", "csect"};
-    private String isPass1[] = {"extref","equ","extdef"};
+            "ltorg", "equ", "org", "csect"};
+    private String isPass1[] = {"extref", "equ","extdef"};
     private Map<String, Method> handlers = new HashMap<>(13);
 
     private DirectiveResolver() {
@@ -40,7 +40,8 @@ public class DirectiveResolver {
         }
 
     }
-    public boolean isPass1(String dir){
+
+    public boolean isPass1(String dir) {
         return isDirective(dir) && Stream.of(isPass1).anyMatch(dir::equalsIgnoreCase);
     }
 
@@ -209,9 +210,9 @@ public class DirectiveResolver {
             char sign = prev==null||prev.equals("+")?'+':'-';
             if (curr.matches("[a-zA-Z]+")) {
                 System.out.println("a match in expression ->"+curr);
-                recs.add(new MRecord(sign,6,
-                                symTab.getCSect(curr).equals(Assembler.getProgName())?curr
-                                                                        :Assembler.getProgName()));
+                recs.add(new MRecord(sign, 6,
+                        symTab.getCSect(curr).equals(Assembler.getProgName()) ? curr
+                                : Assembler.getProgName()));
             }
             prev = curr;
         }
@@ -220,8 +221,8 @@ public class DirectiveResolver {
 
     public SymTab.Type getExpressionType(String operand) throws InvalidExpressionException {
         SymTab symTab = SymTab.getInstance();
-        if(operand.matches("\\d+"))return SymTab.Type.ABSOLUTE;
-        if(operand.matches("[a-zA-z]+"))return SymTab.Type.RELATIVE;
+        if (operand.matches("\\d+")) return SymTab.Type.ABSOLUTE;
+        if (operand.matches("[a-zA-z]+")) return SymTab.Type.RELATIVE;
         int freq[] = new int[2];
         String prev = null;
         List<String> tokens = tokenizeExpression(operand);
@@ -236,7 +237,7 @@ public class DirectiveResolver {
                 freq[symTab.getCSect(curr).equals(Assembler.getProgName()) ? 0 : 1]--;
             prev = curr;
         }
-        System.out.println(operand+"->"+freq[0]+","+freq[1]);
+        System.out.println(operand + "->" + freq[0] + "," + freq[1]);
         if (freq[0] != 1 && freq[0] != 0 || freq[1] != 1 && freq[1] != 0)
             throw new InvalidExpressionException();
         if (freq[0] == freq[1] && freq[0] == 0)
@@ -248,7 +249,7 @@ public class DirectiveResolver {
     }
 
     public boolean isExpression(String expr) {
-        return expr.chars().anyMatch(i -> "+-*/".chars().anyMatch(j -> i == j));
+        return expr != null && expr.chars().anyMatch(i -> "+-*/".chars().anyMatch(j -> i == j));
     }
 
     public void executeStart(String operand) {
@@ -268,7 +269,7 @@ public class DirectiveResolver {
     public void executeExtRef(String operands) {
         Stream.of(operands.split(",")).forEach(ref -> {
             try {
-                SymTab.getInstance().putFull(ref, 0, SymTab.Type.RELATIVE,"other");
+                SymTab.getInstance().putFull(ref, 0, SymTab.Type.RELATIVE, "other");
                 Assembler.addExtRef(ref);
             } catch (DuplicateLabelException e) {
                 e.printStackTrace();
@@ -276,17 +277,16 @@ public class DirectiveResolver {
         });
     }
 
-    public void executeExtDef(String operands)
-    {
-        Stream.of(operands.split(",")).forEach(Assembler::addExtDef);
-    }
-
     // TODO: 13/05/17 this should add the label to the sym table evaluate the operand if it is an expr and replace expression with its value in the intermediate file
     public void executeEqu(Line parsedLine) throws InvalidExpressionException, DuplicateLabelException {
         String label = parsedLine.getLabel(), operand = parsedLine.getOperand();
         SymTab.Type type = getExpressionType(operand);
-        SymTab.getInstance().putFull(label, evalExpression(operand),type,Assembler.getProgName());
-        System.out.println(label+"->type = " + type);
+        SymTab.getInstance().putFull(label, evalExpression(operand), type, Assembler.getProgName());
+        System.out.println(label + "->type = " + type);
+    }
+
+    public void executeExtDef(String operands) {
+        Stream.of(operands.split(",")).forEach(Assembler::addExtDef);
     }
 }
 

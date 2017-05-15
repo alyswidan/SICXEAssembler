@@ -2,7 +2,6 @@ package com.systems.programming.assembler;
 
 import com.systems.programming.assembler.Exceptions.DuplicateLabelException;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,12 +10,15 @@ import java.util.Map;
  */
 public class SymTab {
 
-    public enum Type {RELATIVE,ABSOLUTE};
+    public enum Type {RELATIVE, ABSOLUTE}
+
+    ;
     private static SymTab ourInstance = new SymTab();
     //made the address in the table map string to make it hexadecimal
     private Map<String, Attributes> table = new HashMap<>();
 
-    private SymTab() {}
+    private SymTab() {
+    }
 
     public static SymTab getInstance() {
         return ourInstance;
@@ -31,11 +33,11 @@ public class SymTab {
         return table.get(label).getVal();
     }
 
-    public Type getType(String label){
+    public Type getType(String label) {
         return table.get(label).getType();
     }
-    public String getCSect(String label)
-    {
+
+    public String getCSect(String label) {
         return table.get(label).getcSect();
     }
 
@@ -44,14 +46,14 @@ public class SymTab {
         Attributes attr = new Attributes(address);
         attr.setType(Type.ABSOLUTE);
         attr.setcSect(Assembler.getProgName());
-        table.put(label,attr);
+        table.put(label, attr);
         return address;
     }
+
     //adds whole entery to table
-    public void putFull(String label,int address,Type type,String cSect)throws DuplicateLabelException
-    {
+    public void putFull(String label, int address, Type type, String cSect) throws DuplicateLabelException {
         if (containsKey(label)) throw new DuplicateLabelException();
-        table.put(label,new Attributes(address,type,cSect));
+        table.put(label, new Attributes(address, type, cSect));
     }
 
 
@@ -60,21 +62,20 @@ public class SymTab {
         StringBuilder builder = new StringBuilder();
         //write the symbolTable
         builder.append("===================================================\n");
-        builder.append(String.format("|%10s%5c%10s%5c%10s%5c%10s|\n", "Symbol", '|', "address", '|',"Type",'|',"CSect"));
+        builder.append(String.format("|%10s%5c%10s%5c%10s%5c%10s|\n", "Symbol", '|', "address", '|', "Type", '|', "CSect"));
         builder.append("====================================================\n");
         table.forEach((k, v) -> builder.append(String.format("|%10s%5c%10X%5c%10s%5c%10s|\n",
-                            k, '|', v.getVal(), '|',v.getType(),'|',v.getcSect())));
+                k, '|', v.getVal(), '|', v.getType(), '|', v.getcSect())));
         builder.append("====================================");
         return builder.toString();
     }
 
-    private static class Attributes
-    {
+    private static class Attributes {
         private int val;
         private String cSect;
         private Type type;
 
-        public Attributes(int val, Type type,String cSect) {
+        public Attributes(int val, Type type, String cSect) {
             this.val = val;
             this.cSect = cSect;
             this.type = type;

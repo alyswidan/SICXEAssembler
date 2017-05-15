@@ -1,9 +1,11 @@
 package com.systems.programming.assembler;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by ADMIN on 4/20/2017.
@@ -20,20 +22,27 @@ public class Assembler {
     private static Map<String,Integer> extDefs = new TreeMap<>();
     private static List<MRecord> mRecords = new ArrayList<>();
     private static List<String> extRefs = new ArrayList<>();
+    private static int skipper = 0;
 
+    public static int getSkipper() {
+        return skipper;
+    }
 
+    public static void setSkipper(int skipper) {
+        Assembler.skipper = skipper;
+    }
     public static void main(String[] args) {
         init();
         Pass1.execute();
         Pass2.execute();
     }
-
     public static void addExtDef(String def)
     {
         extDefs.put(def,0);
     }
-    public static void setExtDefAddressIfExists(String def,int address) {
 
+    public static void setExtDefAddressIfExists(String def,int address)
+    {
         if(extDefs.containsKey(def))
             extDefs.put(def,address);
     }
@@ -58,6 +67,7 @@ public class Assembler {
     public static int getProgramLength() {
         return programLength;
     }
+
     public static void setProgramLength(int programLength) {
         Assembler.programLength = programLength;
     }
@@ -119,7 +129,9 @@ public class Assembler {
         Assembler.mRecords.addAll(mRecords);
     }
 
-    public static void addMRecord(MRecord mRecord){mRecords.add(mRecord);}
+    public static void addMRecord(MRecord mRecord) {
+        mRecords.add(mRecord);
+    }
 
     public static List<MRecord> getmRecords() {
         return mRecords;

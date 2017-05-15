@@ -2,12 +2,14 @@
 |    Symbol    |   address    |      Type    |     CSect|
 ====================================================
 |     EXIT2    |       407    |  RELATIVE    |    PALIND|
+|      GGGG    |      141D    |  RELATIVE    |    PALIND|
 |       ioi    |         0    |  RELATIVE    |     other|
 |     INPUT    |       40D    |  RELATIVE    |    PALIND|
 |     ZZZZZ    |      1414    |  RELATIVE    |    PALIND|
 |     EXIT1    |        3C    |  RELATIVE    |    PALIND|
 |    LENGTH    |        19    |  RELATIVE    |    PALIND|
 |     FIRST    |         0    |  RELATIVE    |    PALIND|
+|    Hamada    |      1417    |  RELATIVE    |    PALIND|
 |       klm    |         0    |  RELATIVE    |     other|
 |    BUFFER    |       414    |  RELATIVE    |    PALIND|
 |     RLOOP    |        26    |  RELATIVE    |    PALIND|

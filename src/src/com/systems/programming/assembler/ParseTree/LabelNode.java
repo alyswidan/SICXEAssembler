@@ -16,12 +16,14 @@ public class LabelNode extends ParseNode {
         ParseNode next;
         //an instruction??
         if (OpTable.getInstance().isInstruction(transitionRequest)) {
+            System.out.println(transitionRequest +" is an instruction");
             next = new InstructionNode(transitionRequest);
             next.addState("instruction",transitionRequest);
         }
 
         //a directive??
         else if (DirectiveResolver.getInstance().isDirective(transitionRequest)) {
+            System.out.println(transitionRequest +" is a directive");
             next = new DirectiveNode(transitionRequest);
             next.addState("directive",transitionRequest);
         }// any thing else throw exception

@@ -44,8 +44,10 @@ public class LineParser {
         path.clear();
         List<String> tokenList = parsedLine.getTokens();
         //start the journey to c1lassify the line components
+        System.out.println(tokenList);
         node = new RootNode();
         node = getNextNode(node, tokenList.get(0));
+        System.out.println("pushing "+tokenList.get(0));
 
         //let the line travel through the tree
         for (int i = 1; i < tokenList.size(); i++) {
@@ -145,6 +147,7 @@ public class LineParser {
 
     private ParseNode getNextNode(ParseNode current, String token) throws AssemblerException {
         ParseNode node;
+        System.out.println("pushing "+token);
         node = current.nextNode(token);
         path.add(node);
         return node;

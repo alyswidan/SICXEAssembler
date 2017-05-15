@@ -52,4 +52,12 @@ RESULT   RESW    1
 BUFFER   RESB    4096
 ZZZZZ	 word    BUFFER-RLOOP
 equals	 equ	 klm-ioi
-         END     FIRST
+
+Hamada	CSECT	
+		SUBR    B,T
+        ADDR    B,X
+        COMPR   A,S
+GGGG	WORD	10
+		END     FIRST
+
+		
