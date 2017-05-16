@@ -42,6 +42,10 @@ public class Pass1 {
 
                     else if (parsedLine.isCSECT()) {
                         System.out.println("PASS 1 exited <><><><><><><><><><><><><><><><><><><>");
+                        intermediateFileWrite.println("Control Section:" + parsedLine.getLabel());
+                        String s1 = String.format("%04X", Assembler.getLocationCounter());
+                        intermediateFileWrite.append(s1);
+                        intermediateFileWrite.append(parsedLine.toString());
                         Assembler.setSkipper(counter);
                         symTableWrite.append(SymTab.getInstance().toString());
                         return;
@@ -54,8 +58,9 @@ public class Pass1 {
                     }  else if(parsedLine.isEmpty()) {
                         intermediateFileWrite.println(line.trim());
                     }  else if(parsedLine.isEnd()){
-                        intermediateFileWrite.printf("%04X", Assembler.getLocationCounter());
-                        intermediateFileWrite.println(parsedLine);
+                        String s1 = String.format("%04X", Assembler.getLocationCounter());
+                        intermediateFileWrite.append(s1);
+                        intermediateFileWrite.append(parsedLine.toString());
                         symTableWrite.append(SymTab.getInstance().toString());
                     }
 
@@ -68,8 +73,6 @@ public class Pass1 {
                 }
 
             }
-
-            symTableWrite.append(SymTab.getInstance().toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
