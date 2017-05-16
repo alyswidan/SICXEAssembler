@@ -20,14 +20,14 @@ public class Pass1 {
 
             String line;
 
+            while (Assembler.getSkipper() != -1) {
+                sourceReader.readLine();
+                Assembler.setSkipper(Assembler.getSkipper() - 1);
+            }
+
             while ((line = sourceReader.readLine()) != null) {
                 try {
                     Line parsedLine = LineParser.getInstance().parse(line);
-
-                    if (Assembler.getSkipper() != -1) {
-                        Assembler.setSkipper(Assembler.getSkipper() - 1);
-                        continue;
-                    }
 
                     if (parsedLine.isAssemblerExecutable())
                         parsedLine.execute();
@@ -36,18 +36,17 @@ public class Pass1 {
                         SymTab.getInstance().putFull(parsedLine.getLabel(), Assembler.getLocationCounter(), SymTab.Type.RELATIVE, Assembler.getProgName());
                     }
 
-
                     System.out.println(">>>>>>>>>>>>>>>>>>>>..... " + parsedLine.getMnemonic());
-
                     System.out.println("heeeeeeeeeeeeeeeeeeeeeyyyyyyyyyyyyyyyy " + parsedLine.isCSECT());
+
                     if (parsedLine.isComment()) intermediateFileWrite.println(parsedLine.getComment());
 
-                    /*else if (parsedLine.isCSECT()){
-                        Assembler.setSkipper(counter + 1);
-                        Pass2.execute();
-                    }*/
-
-                    else if (!parsedLine.isEmpty()) {
+                    else if (parsedLine.isCSECT()) {
+                        System.out.println("PASS 1 exited <><><><><><><><><><><><><><><><><><><>");
+                        Assembler.setSkipper(counter);
+                        symTableWrite.append(SymTab.getInstance().toString());
+                        return;
+                    } else if (!parsedLine.isEmpty()) {
                         //write address in first column
                         intermediateFileWrite.printf("%04X", Assembler.getLocationCounter());
                         //write the parsedLine
@@ -65,7 +64,7 @@ public class Pass1 {
 
             }
 
-            symTableWrite.println(SymTab.getInstance());
+            //symTableWrite.append(SymTab.getInstance().toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

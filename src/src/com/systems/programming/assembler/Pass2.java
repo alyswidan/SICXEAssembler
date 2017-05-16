@@ -56,10 +56,28 @@ public class Pass2 {
 
                 if (parsedLine.isAssemblerExecutable()) {//is this an executable
                     parsedLine.execute();//execute it
-                    if (parsedLine.isStart() || parsedLine.isCSECT())//is it a start
+                    if (parsedLine.isStart())//is it a start
                         HTMEWriter.print(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
 
                     System.out.println("<<<<<<<<<<<<<==============>>>>>>>>>. " + parsedLine.isCSECT());
+
+                    if(parsedLine.isCSECT()){
+                        HTMEWriter.append(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
+                        if(currentTRecord.size()>0) {
+                            HTMEWriter.append(createTRecord(currentTRecord, counter));
+                        }
+                        HTMEWriter.append(createMRecords(Assembler.getmRecords()));
+                        System.out.println("helllloooooooowwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+
+                        /*HTMEWriter.print(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
+                        if(currentTRecord.size()>0) {
+                            HTMEWriter.print(createTRecord(currentTRecord, counter));
+                        }
+
+                        HTMEWriter.print(createMRecords(Assembler.getmRecords()));
+                        System.out.println("helllloooooooowwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");*/
+
+                    }
 
                     if (parsedLine.isEnd() || parsedLine.isCSECT())//is it an end
                     {
@@ -70,10 +88,8 @@ public class Pass2 {
                         HTMEWriter.print(createMRecords(Assembler.getmRecords()));
                         System.out.println("helllloooooooowwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
 
-                        if (parsedLine.isEnd()){
-                            HTMEWriter.print(createERecord(parsedLine.getOperand()));
-                            System.out.println(">>>>>>>>>>>>>>>>>>>>>" + Assembler.getmRecords());
-                        }
+                        HTMEWriter.print(createERecord(parsedLine.getOperand()));
+                        System.out.println(">>>>>>>>>>>>>>>>>>>>>" + Assembler.getmRecords());
 
                     }
 
@@ -107,10 +123,10 @@ public class Pass2 {
                 currLine++;
             }
             //System.out.println(Assembler.getExtDef());
-            /*if(Assembler.getSkipper()!=0){
+            if(Assembler.getSkipper()!=0){
                 System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee babyyyyyyyyyyyyyyyyyyyy");
                 Assembler.start();
-            }*/
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -19,10 +19,14 @@ public class Assembler {
     private static String HTMEPath = "HTME Record.txt";
     private static String SymTablePath = "SymTable.txt";
     private static String progName;
-    private static Map<String,Integer> extDefs = new TreeMap<>();
+    private static Map<String, Integer> extDefs = new TreeMap<>();
     private static List<MRecord> mRecords = new ArrayList<>();
     private static List<String> extRefs = new ArrayList<>();
     private static int skipper = -1;
+
+    public static void main(String[] args) {
+        start();
+    }
 
     public static int getSkipper() {
         return skipper;
@@ -31,14 +35,8 @@ public class Assembler {
     public static void setSkipper(int skipper) {
         Assembler.skipper = skipper;
     }
-    public static void main(String[] args) {
-        //start();
-        init();
-        Pass1.execute();
-        Pass2.execute();
-    }
 
-    public static void start(){
+    public static void start() {
         init();
         SymTab.getInstance().clear();
         extRefs.clear();
@@ -48,19 +46,18 @@ public class Assembler {
         Pass2.execute();
     }
 
-    public static void addExtDef(String def)
-    {
-        extDefs.put(def,0);
+    public static void addExtDef(String def) {
+        extDefs.put(def, 0);
     }
 
-    public static void setExtDefAddressIfExists(String def,int address)
-    {
-        if(extDefs.containsKey(def))
-            extDefs.put(def,address);
+    public static void setExtDefAddressIfExists(String def, int address) {
+        if (extDefs.containsKey(def))
+            extDefs.put(def, address);
     }
-    public static String getExtDef(){
+
+    public static String getExtDef() {
         return extDefs.entrySet().stream()
-                .map(pair->pair.getKey()+"_"+String.format("%06X",pair.getValue())).collect(Collectors.joining("_"));
+                .map(pair -> pair.getKey() + "_" + String.format("%06X", pair.getValue())).collect(Collectors.joining("_"));
     }
 
     public static int getLocationCounter() {
@@ -71,9 +68,8 @@ public class Assembler {
         Assembler.locationCounter = locationCounter;
     }
 
-    public static void IncrementLocationCounterBy(int delta)
-    {
-        locationCounter+=delta;
+    public static void IncrementLocationCounterBy(int delta) {
+        locationCounter += delta;
     }
 
     public static int getProgramLength() {
@@ -85,10 +81,8 @@ public class Assembler {
     }
 
 
-    public static void init()
-    {
-        if(!isOptableInitiallized)
-        {
+    public static void init() {
+        if (!isOptableInitiallized) {
             OpTable.getInstance().init(new File("./resources/InstructionSet.txt"));
             isOptableInitiallized = true;
         }
@@ -136,8 +130,7 @@ public class Assembler {
         Assembler.progName = progName;
     }
 
-    public static void appendMRecords(List<MRecord>mRecords)
-    {
+    public static void appendMRecords(List<MRecord> mRecords) {
         Assembler.mRecords.addAll(mRecords);
     }
 
@@ -148,7 +141,10 @@ public class Assembler {
     public static List<MRecord> getmRecords() {
         return mRecords;
     }
-    public static void addExtRef(String ref){extRefs.add(ref);}
+
+    public static void addExtRef(String ref) {
+        extRefs.add(ref);
+    }
 
     public static List<String> getExtRefs() {
         return extRefs;

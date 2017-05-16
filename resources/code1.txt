@@ -54,11 +54,15 @@ BUFFER   RESB    4096
 ZZZZZ	 word    BUFFER-RLOOP
 equals	 equ	 klm-ioi
 
-Hamada	CSECT	
+KELOA	CSECT
+		ADDR	SOSOOO
 		SUBR    B,T
-        ADDR    B,X
-        COMPR   A,S
-GGGG	WORD	10
-		END     FIRST
+         ADDR    B,X
+         COMPR   A,S
+SOSOOO	BASE	20
+		END		FIRST
+		
+
+
 
 		
