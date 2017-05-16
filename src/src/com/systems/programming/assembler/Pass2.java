@@ -45,7 +45,9 @@ public class Pass2 {
                 }
                 catch (AssemblerException ex)
                 {
-                    HTMEWriter.printf("***Error:%s at line %d address %06X \n",ex.getClass().getSimpleName(),currLine,xx);
+                    String s = String.format("***Error:%s at line %d address %06X \n",ex.getClass().getSimpleName(),currLine,xx);
+                    HTMEWriter.append(s);
+                    //HTMEWriter.printf("***Error:%s at line %d address %06X \n",ex.getClass().getSimpleName(),currLine,xx);
                     ex.printStackTrace();
                 }
 
@@ -64,25 +66,27 @@ public class Pass2 {
 
                     if(parsedLine.isCSECT()){
                         //HTMEWriter.append(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
+                        HTMEWriter.append("<><><><><><><><><><><><><><><><><><><>");
+                        HTMEWriter.append("Control Section:" + parsedLine.getLabel());
+
                         if(currentTRecord.size()>0) {
                             HTMEWriter.append(createTRecord(currentTRecord, counter));
                         }
+
                         HTMEWriter.append(createMRecords(Assembler.getmRecords()));
-                        System.out.println("helllloooooooowwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-                        Assembler.setSkipper(-1);
                     }
 
                     System.out.println("IS END OR NOT ???????????? " + parsedLine.isEnd());
                     if (parsedLine.isEnd())//is it an end
                     {
                         if(currentTRecord.size()>0) {
-                            HTMEWriter.print(createTRecord(currentTRecord, counter));
+                            HTMEWriter.append(createTRecord(currentTRecord, counter));
                         }
 
-                        HTMEWriter.print(createMRecords(Assembler.getmRecords()));
+                        HTMEWriter.append(createMRecords(Assembler.getmRecords()));
                         System.out.println("helllloooooooowwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
 
-                        HTMEWriter.print(createERecord(parsedLine.getOperand()));
+                        HTMEWriter.append(createERecord(parsedLine.getOperand()));
                         System.out.println(":::::::::::::::::::::" + Assembler.getmRecords());
 
                     }
@@ -99,18 +103,18 @@ public class Pass2 {
 
                     } else//if it doesn't fit
                     {
-                        HTMEWriter.print(createTRecord(currentTRecord,counter));//print current record
+                        HTMEWriter.append(createTRecord(currentTRecord,counter));//print current record
                         counter = len;
                         currentTRecord.add(parsedLine);
 
                     }
                 }else if(parsedLine.getMnemonic().equalsIgnoreCase("extref")) {
-                    HTMEWriter.print(createRRecords());
+                    HTMEWriter.append(createRRecords());
                 }
                 else if(parsedLine.getMnemonic().equalsIgnoreCase("extdef")){
-                    HTMEWriter.print(createDRecords());
+                    HTMEWriter.append(createDRecords());
                 }else {// if it is a reserve
-                    HTMEWriter.print(createTRecord(currentTRecord,counter));
+                    HTMEWriter.append(createTRecord(currentTRecord,counter));
                     counter = 0;
                 }
                 HTMEWriter.flush();
@@ -119,7 +123,6 @@ public class Pass2 {
             //System.out.println(Assembler.getExtDef());
             if(Assembler.getSkipper()!=-1){
                 System.out.println("Skipper Value ========== " + Assembler.getSkipper());
-                System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee babyyyyyyyyyyyyyyyyyyyy");
                 Assembler.start();
             }
         } catch (FileNotFoundException e) {

@@ -37,12 +37,14 @@ public class Assembler {
     }
 
     public static void start() {
+        System.out.println("<<<<<<<<<<Starting The Assembler for a new Program>>>>>>>>>>>");
         init();
         SymTab.getInstance().clear();
         extRefs.clear();
         extDefs.clear();
         mRecords.clear();
         Pass1.execute();
+        System.out.println("Exited to execute pass 2 !!!!!!!!!!");
         Pass2.execute();
     }
 

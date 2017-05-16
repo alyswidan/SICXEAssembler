@@ -31,26 +31,27 @@
 .
 .SUBROUTINECOMPARERECORD
 .
-03E8                           org           1000               
-03E8         CMPREC          CLEAR              A               
-03EA                         COMPR            X,T               
-03EC                           JEQ          EXIT2               
-03EF                           JGT          EXIT2               
-03F2                           LDA       BUFFER,X               
-03F5                           LDS       BUFFER,X               
-03F8                          SUBR            B,T               
-03FA                          ADDR            B,X               
-03FC                         COMPR            A,S               
-03FE                           JEQ         CMPREC               
-0401                           JLT          ERROR               
-0404                           JGT          ERROR               
-0407          EXIT2            LDA             #1               
-040A                           STA         RESULT               
-
-040D          INPUT           BYTE             12               
-040E          ERROR           RSUB                              
-0411         RESULT           RESW              1               
-0414         BUFFER           RESB           4096               
-1414          ZZZZZ           word           1006               
-1417         equals            equ              0               
-1417                           END          FIRST               
+01F4                           org            500               
+01F4         CMPREC          CLEAR              A               
+01F6                         COMPR            X,T               
+01F8                           JEQ          EXIT2               
+01FB                           JGT          EXIT2               
+01FE                           LDA       BUFFER,X               
+0201                           LDS       BUFFER,X               
+0204                          SUBR            B,T               
+0206                          ADDR            B,X               
+0208                         COMPR            A,S               
+020A                           JEQ         CMPREC               
+020D                           JLT          ERROR               
+0210                           JGT          ERROR               
+0213          EXIT2            LDA             #1               
+0216                           STA         RESULT               
+.
+0219          INPUT           BYTE             12               
+021A          ERROR           RSUB                              
+021D         RESULT           RESW              1               
+0220         BUFFER           RESB           4096               
+1220          ZZZZZ           word            443               
+1223         equals            equ              0               
+.
+1223                           END          FIRST               

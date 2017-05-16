@@ -31,7 +31,7 @@ SEWE	 EQU	 *
 .
 . SUBROUTINE COMPARE RECORD
 .
-	     org	 1000
+	     org	 500
 CMPREC   CLEAR   A
          COMPR   X,T
          JEQ     EXIT2
@@ -46,11 +46,23 @@ CMPREC   CLEAR   A
          JGT     ERROR
 EXIT2    LDA     #1
          STA     RESULT
-
+.
 INPUT    BYTE    12
 ERROR    RSUB
 RESULT   RESW    1
 BUFFER   RESB    4096
-ZZZZZ	 word    BUFFER-RLOOP
+ZZZZZ	 word    BUFFER-RLOOP-SEWE
 equals	 equ	 klm-ioi
-		 END	 FIRST
+.
+KELOA	CSECT
+		SUBR    B,T
+        ADDR    B,X
+        COMPR   A,S
+.KELOA	BASE	20
+
+HISUKA	CSECT
+		SUBR    B,T
+        ADDR    B,X
+        COMPR   A,S
+.KELOA	BASE	20
+		END	 FIRST
