@@ -12,8 +12,8 @@ public class Pass1 {
     private static int counter = 0;
 
     public static void execute() {
-
-        Assembler.init();
+        System.out.println("11111111111111111111111111111111111111111");
+        System.out.println("==========pass1===========");
         try (BufferedReader sourceReader = new BufferedReader(new FileReader(Assembler.getInputPath()));
              PrintWriter intermediateFileWrite = new PrintWriter(new FileWriter(Assembler.getIntermediatePath()));
              PrintWriter symTableWrite = new PrintWriter(new FileWriter(Assembler.getSymTablePath()))) {
@@ -24,7 +24,7 @@ public class Pass1 {
                 try {
                     Line parsedLine = LineParser.getInstance().parse(line);
 
-                    if (Assembler.getSkipper() != 0) {
+                    if (Assembler.getSkipper() != -1) {
                         Assembler.setSkipper(Assembler.getSkipper() - 1);
                         continue;
                     }
@@ -39,8 +39,13 @@ public class Pass1 {
 
                     System.out.println(">>>>>>>>>>>>>>>>>>>>..... " + parsedLine.getMnemonic());
 
-
+                    System.out.println("heeeeeeeeeeeeeeeeeeeeeyyyyyyyyyyyyyyyy " + parsedLine.isCSECT());
                     if (parsedLine.isComment()) intermediateFileWrite.println(parsedLine.getComment());
+
+                    else if (parsedLine.isCSECT()){
+                        Assembler.setSkipper(counter + 1);
+                        Pass2.execute();
+                    }
 
                     else if (!parsedLine.isEmpty()) {
                         //write address in first column
@@ -48,15 +53,6 @@ public class Pass1 {
                         //write the parsedLine
                         intermediateFileWrite.println(parsedLine);
                         Assembler.IncrementLocationCounterBy(parsedLine.getLength());
-                    }
-
-
-                    else if (parsedLine.isCSECT()){
-                        System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbb");
-                        Assembler.setSkipper(counter + 1);
-                        Assembler.setLocationCounter(0);
-                        Assembler.start();
-                        continue;
                     }
 
                     counter++;

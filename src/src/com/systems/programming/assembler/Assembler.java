@@ -22,7 +22,7 @@ public class Assembler {
     private static Map<String,Integer> extDefs = new TreeMap<>();
     private static List<MRecord> mRecords = new ArrayList<>();
     private static List<String> extRefs = new ArrayList<>();
-    private static int skipper = 0;
+    private static int skipper = -1;
 
     public static int getSkipper() {
         return skipper;
@@ -32,7 +32,9 @@ public class Assembler {
         Assembler.skipper = skipper;
     }
     public static void main(String[] args) {
-        start();
+        //start();
+        init();
+        Pass1.execute();
     }
 
     public static void start(){
@@ -41,7 +43,6 @@ public class Assembler {
         extRefs.clear();
         extDefs.clear();
         mRecords.clear();
-        System.out.println("===========" + mRecords);
         Pass1.execute();
         Pass2.execute();
     }
