@@ -53,16 +53,4 @@ RESULT   RESW    1
 BUFFER   RESB    4096
 ZZZZZ	 word    BUFFER-RLOOP
 equals	 equ	 klm-ioi
-
-KELOA	CSECT
-		ADDR	SOSOOO
-		SUBR    B,T
-         ADDR    B,X
-         COMPR   A,S
-SOSOOO	BASE	20
-		END		FIRST
-		
-
-
-
-		
+		 END	 FIRST

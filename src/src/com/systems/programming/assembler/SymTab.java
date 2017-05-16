@@ -34,6 +34,7 @@ public class SymTab {
 
     public Integer get(String label) {
         System.out.println("get label = " + label);
+
         return table.get(label).getVal();
     }
 

@@ -12,8 +12,7 @@ public class Pass1 {
     private static int counter = 0;
 
     public static void execute() {
-        System.out.println("11111111111111111111111111111111111111111");
-        System.out.println("==========pass1===========");
+        System.out.println("=================pass1================");
         try (BufferedReader sourceReader = new BufferedReader(new FileReader(Assembler.getInputPath()));
              PrintWriter intermediateFileWrite = new PrintWriter(new FileWriter(Assembler.getIntermediatePath()));
              PrintWriter symTableWrite = new PrintWriter(new FileWriter(Assembler.getSymTablePath()))) {
@@ -36,8 +35,8 @@ public class Pass1 {
                         SymTab.getInstance().putFull(parsedLine.getLabel(), Assembler.getLocationCounter(), SymTab.Type.RELATIVE, Assembler.getProgName());
                     }
 
-                    System.out.println(">>>>>>>>>>>>>>>>>>>>..... " + parsedLine.getMnemonic());
-                    System.out.println("heeeeeeeeeeeeeeeeeeeeeyyyyyyyyyyyyyyyy " + parsedLine.isCSECT());
+                    //System.out.println(">>>>>>>>>>>>>>>>>>>>..... " + parsedLine.getMnemonic());
+                    //System.out.println("heeeeeeeeeeeeeeeeeeeeeyyyyyyyyyyyyyyyy " + parsedLine.isCSECT());
 
                     if (parsedLine.isComment()) intermediateFileWrite.println(parsedLine.getComment());
 
@@ -46,12 +45,18 @@ public class Pass1 {
                         Assembler.setSkipper(counter);
                         symTableWrite.append(SymTab.getInstance().toString());
                         return;
-                    } else if (!parsedLine.isEmpty()) {
+                    }  else if (!parsedLine.isEmpty() && !parsedLine.isEnd()) {
                         //write address in first column
                         intermediateFileWrite.printf("%04X", Assembler.getLocationCounter());
                         //write the parsedLine
                         intermediateFileWrite.println(parsedLine);
                         Assembler.IncrementLocationCounterBy(parsedLine.getLength());
+                    }  else if(parsedLine.isEmpty()) {
+                        intermediateFileWrite.println(line.trim());
+                    }  else if(parsedLine.isEnd()){
+                        intermediateFileWrite.printf("%04X", Assembler.getLocationCounter());
+                        intermediateFileWrite.println(parsedLine);
+                        symTableWrite.append(SymTab.getInstance().toString());
                     }
 
                     counter++;
@@ -64,7 +69,7 @@ public class Pass1 {
 
             }
 
-            //symTableWrite.append(SymTab.getInstance().toString());
+            symTableWrite.append(SymTab.getInstance().toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

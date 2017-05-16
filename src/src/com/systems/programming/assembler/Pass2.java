@@ -16,13 +16,14 @@ public class Pass2 {
     private static Integer counter = 0;
 
     public static void execute() {
-        System.out.println("==========pass2===========");
+        System.out.println("===============pass2================");
 
         try (BufferedReader sourceReader = new BufferedReader(new FileReader(Assembler.getIntermediatePath()));
              PrintWriter HTMEWriter = new PrintWriter(new FileWriter(Assembler.getHTMEPath()))) {
             int currLine = 1;
             LineParser.getInstance().setMode(LineParser.Mode.DEEP);
             String line;
+            List<Line> MRecords = new ArrayList<>();
             List<Line> currentTRecord = new ArrayList<>();
             System.out.println("<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>> ");
             while ((line = sourceReader.readLine()) != null) {
@@ -62,24 +63,17 @@ public class Pass2 {
                     System.out.println("<<<<<<<<<<<<<==============>>>>>>>>>. " + parsedLine.isCSECT());
 
                     if(parsedLine.isCSECT()){
-                        HTMEWriter.append(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
+                        //HTMEWriter.append(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
                         if(currentTRecord.size()>0) {
                             HTMEWriter.append(createTRecord(currentTRecord, counter));
                         }
                         HTMEWriter.append(createMRecords(Assembler.getmRecords()));
                         System.out.println("helllloooooooowwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-
-                        /*HTMEWriter.print(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
-                        if(currentTRecord.size()>0) {
-                            HTMEWriter.print(createTRecord(currentTRecord, counter));
-                        }
-
-                        HTMEWriter.print(createMRecords(Assembler.getmRecords()));
-                        System.out.println("helllloooooooowwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");*/
-
+                        Assembler.setSkipper(-1);
                     }
 
-                    if (parsedLine.isEnd() || parsedLine.isCSECT())//is it an end
+                    System.out.println("IS END OR NOT ???????????? " + parsedLine.isEnd());
+                    if (parsedLine.isEnd())//is it an end
                     {
                         if(currentTRecord.size()>0) {
                             HTMEWriter.print(createTRecord(currentTRecord, counter));
@@ -89,7 +83,7 @@ public class Pass2 {
                         System.out.println("helllloooooooowwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
 
                         HTMEWriter.print(createERecord(parsedLine.getOperand()));
-                        System.out.println(">>>>>>>>>>>>>>>>>>>>>" + Assembler.getmRecords());
+                        System.out.println(":::::::::::::::::::::" + Assembler.getmRecords());
 
                     }
 
@@ -123,7 +117,8 @@ public class Pass2 {
                 currLine++;
             }
             //System.out.println(Assembler.getExtDef());
-            if(Assembler.getSkipper()!=0){
+            if(Assembler.getSkipper()!=-1){
+                System.out.println("Skipper Value ========== " + Assembler.getSkipper());
                 System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee babyyyyyyyyyyyyyyyyyyyy");
                 Assembler.start();
             }
