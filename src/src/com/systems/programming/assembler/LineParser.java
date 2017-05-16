@@ -119,8 +119,12 @@ public class LineParser {
         if (parsedLine.isStart())
             Assembler.setProgName(parsedLine.getLabel());
 
-        if (parsedLine.isEqu())
+        if (parsedLine.isEqu()){
             dr.executeEqu(parsedLine);
+            if(parsedLine.getOperand().equalsIgnoreCase("*"))
+                parsedLine.setOperand(String.valueOf(Assembler.getLocationCounter()));
+        }
+
 
 
         if (dr.isDirective(parsedLine.getMnemonic()) && dr.isExpression(parsedLine.getOperand())) {

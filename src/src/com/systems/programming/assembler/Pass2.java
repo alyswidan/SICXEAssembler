@@ -107,10 +107,10 @@ public class Pass2 {
                 currLine++;
             }
             //System.out.println(Assembler.getExtDef());
-            if(Assembler.getSkipper()!=0){
+            /*if(Assembler.getSkipper()!=0){
                 System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee babyyyyyyyyyyyyyyyyyyyy");
                 Assembler.start();
-            }
+            }*/
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

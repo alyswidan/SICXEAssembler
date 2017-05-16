@@ -26,6 +26,7 @@ RLOOP    TD      INPUT
          TIXR    T
          JLT     RLOOP
 EXIT1    STX     LENGTH
+SEWE	 EQU	 *
          RSUB
 .
 . SUBROUTINE COMPARE RECORD

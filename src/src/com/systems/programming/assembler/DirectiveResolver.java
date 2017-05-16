@@ -281,7 +281,10 @@ public class DirectiveResolver {
     public void executeEqu(Line parsedLine) throws InvalidExpressionException, DuplicateLabelException {
         String label = parsedLine.getLabel(), operand = parsedLine.getOperand();
         SymTab.Type type = getExpressionType(operand);
-        SymTab.getInstance().putFull(label, evalExpression(operand), type, Assembler.getProgName());
+        if(parsedLine.getOperand().equalsIgnoreCase("*"))
+            SymTab.getInstance().putFull(label, Assembler.getLocationCounter(), type, Assembler.getProgName());
+        else
+            SymTab.getInstance().putFull(label, evalExpression(operand), type, Assembler.getProgName());
         System.out.println(label + "->type = " + type);
     }
 

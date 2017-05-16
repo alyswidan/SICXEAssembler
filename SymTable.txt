@@ -1,0 +1,25 @@
+===================================================
+|    Symbol    |   address    |      Type    |     CSect|
+====================================================
+|     EXIT2    |       407    |  RELATIVE    |    PALIND|
+|      GGGG    |      141D    |  RELATIVE    |    PALIND|
+|       ioi    |         0    |  RELATIVE    |     other|
+|     INPUT    |       40D    |  RELATIVE    |    PALIND|
+|     ZZZZZ    |      1414    |  RELATIVE    |    PALIND|
+|     EXIT1    |        3C    |  RELATIVE    |    PALIND|
+|      SEWE    |        3F    |  ABSOLUTE    |    PALIND|
+|    LENGTH    |        19    |  RELATIVE    |    PALIND|
+|     FIRST    |         0    |  RELATIVE    |    PALIND|
+|    Hamada    |      1417    |  RELATIVE    |    PALIND|
+|       klm    |         0    |  RELATIVE    |     other|
+|    BUFFER    |       414    |  RELATIVE    |    PALIND|
+|     RLOOP    |        26    |  RELATIVE    |    PALIND|
+|     CLOOP    |         3    |  RELATIVE    |    PALIND|
+|    equals    |         0    |  ABSOLUTE    |    PALIND|
+|       xyz    |         0    |  RELATIVE    |     other|
+|     ERROR    |       40E    |  RELATIVE    |    PALIND|
+|     RDREC    |        1C    |  RELATIVE    |    PALIND|
+|    CMPREC    |       3E8    |  RELATIVE    |    PALIND|
+|    RESULT    |       411    |  RELATIVE    |    PALIND|
+|    PALIND    |         0    |  RELATIVE    |    PALIND|
+====================================

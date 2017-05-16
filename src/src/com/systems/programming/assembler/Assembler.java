@@ -35,6 +35,7 @@ public class Assembler {
         //start();
         init();
         Pass1.execute();
+        Pass2.execute();
     }
 
     public static void start(){

@@ -26,6 +26,7 @@
 0037                          TIXR              T               
 0039                           JLT          RLOOP               
 003C          EXIT1            STX         LENGTH               
+003F           SEWE            EQU             63               
 003F                          RSUB                              
 .
 .SUBROUTINECOMPARERECORD
@@ -51,3 +52,9 @@
 0414         BUFFER           RESB           4096               
 1414          ZZZZZ           word           1006               
 1417         equals            equ              0               
+1417         Hamada          CSECT                              
+1417                          SUBR            B,T               
+1419                          ADDR            B,X               
+141B                         COMPR            A,S               
+141D           GGGG           WORD             10               
+1420                           END          FIRST               

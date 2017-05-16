@@ -42,10 +42,10 @@ public class Pass1 {
                     System.out.println("heeeeeeeeeeeeeeeeeeeeeyyyyyyyyyyyyyyyy " + parsedLine.isCSECT());
                     if (parsedLine.isComment()) intermediateFileWrite.println(parsedLine.getComment());
 
-                    else if (parsedLine.isCSECT()){
+                    /*else if (parsedLine.isCSECT()){
                         Assembler.setSkipper(counter + 1);
                         Pass2.execute();
-                    }
+                    }*/
 
                     else if (!parsedLine.isEmpty()) {
                         //write address in first column
