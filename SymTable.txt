@@ -1,23 +1,5 @@
 ===================================================
 |    Symbol    |   address    |      Type    |     CSect|
 ====================================================
-|     EXIT2    |       213    |  RELATIVE    |    PALIND|
-|       ioi    |         0    |  RELATIVE    |     other|
-|     INPUT    |       219    |  RELATIVE    |    PALIND|
-|     ZZZZZ    |      1220    |  RELATIVE    |    PALIND|
-|     EXIT1    |        3C    |  RELATIVE    |    PALIND|
-|      SEWE    |        3F    |  ABSOLUTE    |    PALIND|
-|    LENGTH    |        19    |  RELATIVE    |    PALIND|
-|     FIRST    |         0    |  RELATIVE    |    PALIND|
-|       klm    |         0    |  RELATIVE    |     other|
-|    BUFFER    |       220    |  RELATIVE    |    PALIND|
-|     RLOOP    |        26    |  RELATIVE    |    PALIND|
-|     CLOOP    |         3    |  RELATIVE    |    PALIND|
-|    equals    |         0    |  ABSOLUTE    |    PALIND|
-|       xyz    |         0    |  RELATIVE    |     other|
-|     ERROR    |       21A    |  RELATIVE    |    PALIND|
-|     RDREC    |        1C    |  RELATIVE    |    PALIND|
-|    CMPREC    |       1F4    |  RELATIVE    |    PALIND|
-|    RESULT    |       21D    |  RELATIVE    |    PALIND|
-|    PALIND    |         0    |  RELATIVE    |    PALIND|
+|      SOSO    |         6    |  RELATIVE    |    PALIND|
 ====================================

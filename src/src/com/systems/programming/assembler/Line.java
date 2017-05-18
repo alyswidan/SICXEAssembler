@@ -27,7 +27,9 @@ public class Line {
     }
 
     public boolean isCSECT() {
-        return mnemonic!=null && mnemonic.equalsIgnoreCase("CSECT");
+        if(mnemonic!=null)
+            System.out.println(mnemonic+"++++++++++"+mnemonic.equalsIgnoreCase("csect"));
+        return mnemonic!=null && mnemonic.equalsIgnoreCase("csect");
     }
 
     public enum ArgType {IMMEDIATE,INDIRECT,DIRECT};

@@ -23,6 +23,8 @@ public class Assembler {
     private static List<MRecord> mRecords = new ArrayList<>();
     private static List<String> extRefs = new ArrayList<>();
     private static int skipper = -1;
+    private static int currStart = 0;
+    private static int nextStart = 0;
 
     public static void main(String[] args) {
         start();
@@ -40,6 +42,7 @@ public class Assembler {
         System.out.println("<<<<<<<<<<Starting The Assembler for a new Program>>>>>>>>>>>");
         init();
         SymTab.getInstance().clear();
+
         extRefs.clear();
         extDefs.clear();
         mRecords.clear();
@@ -151,4 +154,22 @@ public class Assembler {
     public static List<String> getExtRefs() {
         return extRefs;
     }
+
+
+    public static int getCurrStart() {
+        return currStart;
+    }
+
+    public static void setCurrStart(int currStart) {
+        Assembler.currStart = currStart;
+    }
+
+    public static int getNextStart() {
+        return nextStart;
+    }
+
+    public static void setNextStart(int nextStart) {
+        Assembler.nextStart = nextStart;
+    }
 }
+

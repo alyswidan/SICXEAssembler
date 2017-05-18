@@ -1,8 +1,7 @@
 PALIND   START   0
-extdef   RLOOP,RDREC
 extref	 xyz,klm,ioi
 FIRST    LDB     #1
-CLOOP    +JSUB   ioi
+CLOOP    +JSUB   RDREC
          LDA     LENGTH
          COMP    #0
          JEQ     CLOOP
@@ -16,7 +15,7 @@ LENGTH   RESW    1
 RDREC    CLEAR   X
          CLEAR   A
          CLEAR   S
-         +LDT    klm
+         +LDT    #4096
 RLOOP    TD      INPUT
          JEQ     RLOOP
          RD      INPUT
@@ -56,13 +55,13 @@ equals	 equ	 klm-ioi
 .
 KELOA	CSECT
 		SUBR    B,T
-        ADDR    B,X
+      	ADDR    B,X
         COMPR   A,S
-.KELOA	BASE	20
+HAMADA	BASE	20
 
 HISUKA	CSECT
 		SUBR    B,T
         ADDR    B,X
         COMPR   A,S
-.KELOA	BASE	20
-		END	 FIRST
+SOSO	BASE	20
+		END	 	0

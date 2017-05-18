@@ -12,6 +12,7 @@ public class SymTab {
 
     public void clear() {
         table.clear();
+        System.out.println("------>table size "+table.size());
     }
 
     public enum Type {RELATIVE, ABSOLUTE}

@@ -23,9 +23,12 @@ public class Pass2 {
             int currLine = 1;
             LineParser.getInstance().setMode(LineParser.Mode.DEEP);
             String line;
-            List<Line> MRecords = new ArrayList<>();
             List<Line> currentTRecord = new ArrayList<>();
             System.out.println("<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>> ");
+            for (int i = 0; i < Assembler.getCurrStart(); i++) {
+                sourceReader.readLine();
+            }
+
             while ((line = sourceReader.readLine()) != null) {
                 System.out.println("beeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeepppppppppppppppppppppp");
                 System.out.println("line = " + line);
@@ -120,9 +123,11 @@ public class Pass2 {
                 HTMEWriter.flush();
                 currLine++;
             }
+
             //System.out.println(Assembler.getExtDef());
-            if(Assembler.getSkipper()!=-1){
-                System.out.println("Skipper Value ========== " + Assembler.getSkipper());
+
+            if(Assembler.getCurrStart() != Assembler.getNextStart()) {
+                Assembler.setCurrStart(Assembler.getNextStart());
                 Assembler.start();
             }
         } catch (FileNotFoundException e) {
