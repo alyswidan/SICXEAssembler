@@ -12,27 +12,34 @@ public class Pass1 {
     private static int counter = 0;
 
     public static void execute() {
+        PrintWriter clearer;
+        if(Assembler.getCurrStart()==0)
+        {
+            try {
+                clear(Assembler.getHTMEPath());
+                clear(Assembler.getIntermediatePath());
+                clear(Assembler.getSymTablePath());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
         System.out.println("=================pass1================");
         try (LineNumberReader sourceReader = new LineNumberReader(new FileReader(Assembler.getInputPath()));
-             PrintWriter intermediateFileWrite = new PrintWriter(new FileWriter(Assembler.getIntermediatePath()),true);
-             PrintWriter symTableWrite = new PrintWriter(new FileWriter(Assembler.getSymTablePath()),true)) {
+             PrintWriter intermediateFileWrite = new PrintWriter(new FileWriter(Assembler.getIntermediatePath(),true),true);
+             PrintWriter symTableWrite = new PrintWriter(new FileWriter(Assembler.getSymTablePath(),true),true)) {
 
             String line;
 
-            /*while (Assembler.getSkipper() != -1) {
-                sourceReader.readLine();
-                Assembler.setSkipper(Assembler.getSkipper() - 1);
-            }*/
-
+            // TODO: 18/05/17  sources reader .setLineNumnber
             for (int i = 0; i < Assembler.getCurrStart(); i++) {
                 sourceReader.readLine();
             }
-
-            Assembler.setSkipper(-1);
-
+            LineParser.getInstance().setMode(LineParser.Mode.SHALLOW);
             while ((line = sourceReader.readLine()) != null) {
                 try {
                     Line parsedLine = LineParser.getInstance().parse(line);
+                    System.out.println("parsedLine = " + parsedLine);
 
                     if (parsedLine.isAssemblerExecutable())
                         parsedLine.execute();
@@ -47,15 +54,16 @@ public class Pass1 {
                     if (parsedLine.isComment()) intermediateFileWrite.println(parsedLine.getComment());
 
                     else if (parsedLine.isCSECT() && sourceReader.getLineNumber() !=Assembler.getCurrStart()) {
+                        Assembler.setNextProgName(parsedLine.getLabel());
                         System.out.println("PASS 1 exited <><><><><><><><><><><><><><><><><><><>");
-                        intermediateFileWrite.append("<><><><><><><><><><><><><><><><><><><>");
-                        //intermediateFileWrite.append("Control Section:" + parsedLine.getLabel());
                         //write address in first column
-                        //intermediateFileWrite.printf("%04X", Assembler.getLocationCounter());
+                        intermediateFileWrite.printf("0000");
                         //write the parsedLine
-                        //intermediateFileWrite.println(parsedLine);
+                        intermediateFileWrite.println(parsedLine);
+
                         Assembler.IncrementLocationCounterBy(parsedLine.getLength());
                         //setting the skipper value with the wanted number of skipped line
+                        System.out.println("csect->"+parsedLine.getLabel()+" "+sourceReader.getLineNumber() );
                         Assembler.setNextStart(sourceReader.getLineNumber());
                         //Appending the SYMTAB File with the previous SYMTAB before the CSECT
                         symTableWrite.append(SymTab.getInstance().toString());
@@ -67,10 +75,11 @@ public class Pass1 {
                         intermediateFileWrite.println(parsedLine);
                         Assembler.IncrementLocationCounterBy(parsedLine.getLength());
                     }  else if(parsedLine.isEmpty()) {
-                        //intermediateFileWrite.println(line.trim());
+                        intermediateFileWrite.append(".\n");
                     }  else if(parsedLine.isEnd()){
                         //Assembler.setNextStart(sourceReader.getLineNumber());
                         //write address in first column
+                        Assembler.setLastSect(true);
                         intermediateFileWrite.printf("%04X", Assembler.getLocationCounter());
                         //write the parsedLine
                         intermediateFileWrite.println(parsedLine);
@@ -89,6 +98,13 @@ public class Pass1 {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void clear(String path) throws FileNotFoundException {
+        PrintWriter clearer;
+        clearer = new PrintWriter(path);
+        clearer.flush();
+        clearer.close();
     }
 
 }

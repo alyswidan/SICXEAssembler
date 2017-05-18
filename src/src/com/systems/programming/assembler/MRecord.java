@@ -20,7 +20,7 @@ public class MRecord {
     public MRecord()
     {
 
-        this.address = Assembler.getLocationCounter();
+        this.address = Assembler.getLocationCounter()+1;
         this.sign = '+';
         this.length = 5;
         this.relativeTo = Assembler.getProgName();

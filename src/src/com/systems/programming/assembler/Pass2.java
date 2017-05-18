@@ -18,8 +18,8 @@ public class Pass2 {
     public static void execute() {
         System.out.println("===============pass2================");
 
-        try (BufferedReader sourceReader = new BufferedReader(new FileReader(Assembler.getIntermediatePath()));
-             PrintWriter HTMEWriter = new PrintWriter(new FileWriter(Assembler.getHTMEPath()))) {
+        try (LineNumberReader sourceReader = new LineNumberReader(new FileReader(Assembler.getIntermediatePath()));
+             PrintWriter HTMEWriter = new PrintWriter(new FileWriter(Assembler.getHTMEPath(),true),true)) {
             int currLine = 1;
             LineParser.getInstance().setMode(LineParser.Mode.DEEP);
             String line;
@@ -30,7 +30,6 @@ public class Pass2 {
             }
 
             while ((line = sourceReader.readLine()) != null) {
-                System.out.println("beeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeepppppppppppppppppppppp");
                 System.out.println("line = " + line);
                 String address = line.split("\\s+")[0];
                 line = Arrays.stream(line.split("\\s+")).skip(1).collect(Collectors.joining("  "));
@@ -68,9 +67,8 @@ public class Pass2 {
                     System.out.println("<<<<<<<<<<<<<==============>>>>>>>>>. " + parsedLine.isCSECT());
 
                     if(parsedLine.isCSECT()){
-                        //HTMEWriter.append(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
-                        HTMEWriter.append("<><><><><><><><><><><><><><><><><><><>");
-                        HTMEWriter.append("Control Section:" + parsedLine.getLabel());
+                        //System.out.println("hahahhahahahahhahahha parsedLine = " + parsedLine);
+                       // HTMEWriter.append(createHRecord(parsedLine.getLabel(), "0"));
 
                         if(currentTRecord.size()>0) {
                             HTMEWriter.append(createTRecord(currentTRecord, counter));
@@ -78,8 +76,6 @@ public class Pass2 {
 
                         HTMEWriter.append(createMRecords(Assembler.getmRecords()));
                     }
-
-                    System.out.println("IS END OR NOT ???????????? " + parsedLine.isEnd());
                     if (parsedLine.isEnd())//is it an end
                     {
                         if(currentTRecord.size()>0) {
@@ -87,11 +83,8 @@ public class Pass2 {
                         }
 
                         HTMEWriter.append(createMRecords(Assembler.getmRecords()));
-                        System.out.println("helllloooooooowwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
 
                         HTMEWriter.append(createERecord(parsedLine.getOperand()));
-                        System.out.println(":::::::::::::::::::::" + Assembler.getmRecords());
-
                     }
 
                 } else if (parsedLine.getObjectCode() != null && !parsedLine.getObjectCode().toString().equals("null"))/* if this is not a reserve*/ {
@@ -126,8 +119,11 @@ public class Pass2 {
 
             //System.out.println(Assembler.getExtDef());
 
-            if(Assembler.getCurrStart() != Assembler.getNextStart()) {
+            if(!Assembler.isLastSect()) {
+                HTMEWriter.println("============================================");
+                HTMEWriter.println(createHRecord(Assembler.getNextProgName(), "0"));
                 Assembler.setCurrStart(Assembler.getNextStart());
+                Assembler.setProgName(Assembler.getNextProgName());
                 Assembler.start();
             }
         } catch (FileNotFoundException e) {
