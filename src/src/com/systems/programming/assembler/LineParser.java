@@ -37,6 +37,7 @@ public class LineParser {
 
     public Line parse(String line) throws AssemblerException {
 
+        System.out.println("line = " + line);
         Line parsedLine = new Line(line);
         if (parsedLine.isEmpty() || parsedLine.isComment()) return parsedLine;
 
@@ -54,7 +55,7 @@ public class LineParser {
 
             node = getNextNode(node, tokenList.get(i));
         }
-
+        System.out.println("mode = " + mode);
         if (mode.equals(Mode.SHALLOW))
             return shallowParse(parsedLine);
         else
@@ -107,8 +108,10 @@ public class LineParser {
 
         DirectiveResolver dr = DirectiveResolver.getInstance();
         //traverse the path and get components into corresponding variables
+        System.out.println("the shallow parser");
         path.forEach((ParseNode n) ->
         {
+            System.out.println("n = " + n);
             if (n instanceof LabelNode) parsedLine.setLabel(n.getState("label"));
             if (n instanceof InstructionNode) parsedLine.setMnemonic(n.getState("instruction"));
             if (n instanceof DirectiveNode) parsedLine.setMnemonic(n.getState("directive"));

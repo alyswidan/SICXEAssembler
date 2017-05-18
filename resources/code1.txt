@@ -1,8 +1,7 @@
 PALIND   START   0
-extdef   RLOOP,RDREC
 extref	 xyz,klm,ioi
 FIRST    LDB     #1
-CLOOP    +JSUB   ioi
+CLOOP    +JSUB   RDREC
          LDA     LENGTH
          COMP    #0
          JEQ     CLOOP
@@ -16,7 +15,7 @@ LENGTH   RESW    1
 RDREC    CLEAR   X
          CLEAR   A
          CLEAR   S
-         +LDT    klm
+         +LDT    #4096
 RLOOP    TD      INPUT
          JEQ     RLOOP
          RD      INPUT
@@ -55,14 +54,121 @@ ZZZZZ	 word    BUFFER-RLOOP-SEWE
 equals	 equ	 klm-ioi
 .
 KELOA	CSECT
+extref	 xyz,klm,ioi
+FIRST    LDB     #1
+CLOOP    +JSUB   RDREC
+         LDA     LENGTH
+         COMP    #0
+         JEQ     CLOOP
+         LDT     #LENGTH
+         SUBR    B,T
+         +JSUB   CMPREC
+LENGTH   RESW    1
+.
+. SUBROUTINE READ RECORD
+.
+RDREC    CLEAR   X
+         CLEAR   A
+         CLEAR   S
+         +LDT    #4096
+RLOOP    TD      INPUT
+         JEQ     RLOOP
+         RD      INPUT
+         COMPR   A,S
+         JEQ     EXIT1
+         STCH    BUFFER,X
+         TIXR    T
+         JLT     RLOOP
+EXIT1    STX     LENGTH
+SEWE	 EQU	 *
+         RSUB
+.
+. SUBROUTINE COMPARE RECORD
+.
+	     org	 500
+CMPREC   CLEAR   A
+         COMPR   X,T
+         JEQ     EXIT2
+         JGT     EXIT2
+         LDA     BUFFER,X
+         LDS     BUFFER,X
+         SUBR    B,T
+         ADDR    B,X
+         COMPR   A,S
+         JEQ     CMPREC
+         JLT     ERROR
+         JGT     ERROR
+EXIT2    LDA     #1
+         STA     RESULT
+.
+INPUT    BYTE    12
+ERROR    RSUB
+RESULT   RESW    1
+BUFFER   RESB    4096
+ZZZZZ	 word    BUFFER-RLOOP-SEWE
+equals	 equ	 klm-ioi
 		SUBR    B,T
-        ADDR    B,X
+      	ADDR    B,X
         COMPR   A,S
-.KELOA	BASE	20
+LOLO	EQU		*
+HAMADA	BASE	20
 
 HISUKA	CSECT
+extref	 xyz,klm,ioi
+FIRST    LDB     #1
+CLOOP    +JSUB   RDREC
+         LDA     LENGTH
+         COMP    #0
+         JEQ     CLOOP
+         LDT     #LENGTH
+         SUBR    B,T
+         +JSUB   CMPREC
+LENGTH   RESW    1
+.
+. SUBROUTINE READ RECORD
+.
+RDREC    CLEAR   X
+         CLEAR   A
+         CLEAR   S
+         +LDT    #4096
+RLOOP    TD      INPUT
+         JEQ     RLOOP
+         RD      INPUT
+         COMPR   A,S
+         JEQ     EXIT1
+         STCH    BUFFER,X
+         TIXR    T
+         JLT     RLOOP
+EXIT1    STX     LENGTH
+SEWE	 EQU	 *
+         RSUB
+.
+. SUBROUTINE COMPARE RECORD
+.
+	     org	 500
+CMPREC   CLEAR   A
+         COMPR   X,T
+         JEQ     EXIT2
+         JGT     EXIT2
+         LDA     BUFFER,X
+         LDS     BUFFER,X
+         SUBR    B,T
+         ADDR    B,X
+         COMPR   A,S
+         JEQ     CMPREC
+         JLT     ERROR
+         JGT     ERROR
+EXIT2    LDA     #1
+         STA     RESULT
+.
+INPUT    BYTE    12
+ERROR    RSUB
+RESULT   RESW    1
+BUFFER   RESB    4096
+ZZZZZ	 word    BUFFER-RLOOP-SEWE
+equals	 equ	 klm-ioi
 		SUBR    B,T
-        ADDR    B,X
+       ADDR    B,X
         COMPR   A,S
-.KELOA	BASE	20
-		END	 FIRST
+SOSO	BASE	20
+		END	 	0
