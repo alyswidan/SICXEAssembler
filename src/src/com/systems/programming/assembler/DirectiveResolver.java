@@ -149,7 +149,10 @@ public class DirectiveResolver {
 
     public ObjectCode parseWord(String operand) {
         ObjectCode objectCode = new ObjectCode();
-        objectCode.setOpcode(String.format("%06X", Integer.parseInt(operand)));
+        if (!SymTab.getInstance().containsKey(operand))
+            objectCode.setOpcode(String.format("%06X", Integer.parseInt(operand)));
+        else
+            objectCode.setOpcode(String.format("%06X", SymTab.getInstance().get(operand)));
         objectCode.setDirective(true);
         objectCode.setLength(3);
         return objectCode;
