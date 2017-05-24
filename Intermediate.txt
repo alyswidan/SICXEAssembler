@@ -1,11 +1,13 @@
-0000                     MAIN                    START                     0000                         
-0000                    FIRST                     +LDA                   #BEGIN                         
-0004                   SECOND                     +LDX                   #FINAL                         
-0008                     LOOP                     ADDR                      X,A                         
-000A                                               TIX                      #11                         
-000D                                               JLT                     LOOP                         
-0010                    BEGIN                      EQU        FIRST-SECOND+LOOP                         
-0010                     DUMP                     RESW                      100                         
-013C                    FINAL                      EQU   LOOP+SECOND-DUMP-BEGIN                         
-013C                                               END                        0                         
-.
+0000                    PROG1                    START                     0000                         
+0000                                            EXTDEF                    INDEV                         
+0000                                               LDX                       #0                         
+0003                                               LDT                      #10                         
+0006                    RLOOP                       TD                    INDEV                         
+0009                                               JEQ                    RLOOP                         
+000C                                                RD                    INDEV                         
+000F                                              STCH                 RECORD,X                         
+0012                                              TIXR                        T                         
+0014                                               JLT                    RLOOP                         
+0017                    INDEV                     BYTE                    X'F1'                         
+0018                   RECORD                     RESB                      100                         
+0000                    PROG2                    CSECT                                                  

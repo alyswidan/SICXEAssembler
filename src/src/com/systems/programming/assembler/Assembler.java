@@ -27,6 +27,7 @@ public class Assembler {
     private static int nextStart = 0;
     private static boolean lastSect;
     private static String nextProgName;
+    private static int proglength;
 
     public static void main(String[] args) {
         start();
@@ -38,6 +39,14 @@ public class Assembler {
 
     public static void setSkipper(int skipper) {
         Assembler.skipper = skipper;
+    }
+
+    public static int getProglength() {
+        return proglength;
+    }
+
+    public static void setProglength(int proglength) {
+        Assembler.proglength = proglength;
     }
 
     public static void start() {

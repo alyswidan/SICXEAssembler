@@ -39,7 +39,7 @@ public class Pass1 {
             while ((line = sourceReader.readLine()) != null) {
                 try {
                     Line parsedLine = LineParser.getInstance().parse(line);
-                    //System.out.println("parsedLine = " + parsedLine);
+                    System.out.println("parsedLine = " + parsedLine);
 
                     if (parsedLine.isAssemblerExecutable())
                         parsedLine.execute();
@@ -54,7 +54,8 @@ public class Pass1 {
 
                     else if (parsedLine.isCSECT() && sourceReader.getLineNumber() !=Assembler.getCurrStart()) {
                         Assembler.setNextProgName(parsedLine.getLabel());
-                        //System.out.println("PASS 1 exited <><><><><><><><><><><><><><><><><><><>");
+                        Assembler.setProglength(Assembler.getLocationCounter());
+                        System.out.println("PASS 1 exited <><><><><><><><><><><><><><><><><><><>");
                         //write address in first column
                         intermediateFileWrite.printf("0000");
                         //write the parsedLine
@@ -62,7 +63,7 @@ public class Pass1 {
 
                         Assembler.IncrementLocationCounterBy(parsedLine.getLength());
                         //setting the skipper value with the wanted number of skipped line
-                        //System.out.println("csect->"+parsedLine.getLabel()+" "+sourceReader.getLineNumber() );
+                        System.out.println("csect->"+parsedLine.getLabel()+" "+sourceReader.getLineNumber() );
                         Assembler.setNextStart(sourceReader.getLineNumber());
                         //Appending the SYMTAB File with the previous SYMTAB before the CSECT
                         symTableWrite.append(SymTab.getInstance().toString());

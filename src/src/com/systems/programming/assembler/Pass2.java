@@ -67,8 +67,6 @@ public class Pass2 {
                    // System.out.println("<<<<<<<<<<<<<==============>>>>>>>>>. " + parsedLine.isCSECT());
 
                     if(parsedLine.isCSECT()){
-                        //System.out.println("hahahhahahahahhahahha parsedLine = " + parsedLine);
-                       // HTMEWriter.append(createHRecord(parsedLine.getLabel(), "0"));
 
                         if(currentTRecord.size()>0) {
                             HTMEWriter.append(createTRecord(currentTRecord, counter));
@@ -176,7 +174,7 @@ public class Pass2 {
                 "_" +
                 String.format("%06X", address) +
                 "_" +
-                String.format("%06X", Assembler.getProgramLength())
+                String.format("%06X", Assembler.getProglength())
                 + "\n";
     }
 
