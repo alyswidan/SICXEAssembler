@@ -20,4 +20,4 @@ RLOOP    TD     INDEV
          +STCH  RECORD,X
          TIXR   T 
          JLT    RLOOP 
-         END    PROG1 
+         END    0 

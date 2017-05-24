@@ -19,7 +19,7 @@ public class MRecord {
     }
     public MRecord(String label)
     {
-
+        
         this.address = Assembler.getLocationCounter()+1;
         this.sign = '+';
         this.length = 5;
