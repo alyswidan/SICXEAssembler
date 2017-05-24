@@ -128,8 +128,6 @@ public class LineParser {
                 parsedLine.setOperand(String.valueOf(Assembler.getLocationCounter()));
         }
 
-
-
         if (dr.isDirective(parsedLine.getMnemonic()) && dr.isExpression(parsedLine.getOperand())) {
             List<MRecord>recs = dr.getMrecords(parsedLine.getOperand());
             System.out.println(parsedLine.getMnemonic()+" -> recs = " + recs);

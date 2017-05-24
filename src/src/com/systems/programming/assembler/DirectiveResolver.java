@@ -19,15 +19,12 @@ public class DirectiveResolver {
             "start", "end", "nobase", "org", "equ",
             "csect", "extref","extdef"};
     private String hasNoObjectCode[] = {"end", "start", "base", "nobase",
-            "ltorg", "equ", "org", "csect"};
+            "ltorg", "equ", "org", "csect", "extdef"};
     private String isPass1[] = {"extref", "equ","extdef"};
     private Map<String, Method> handlers = new HashMap<>(13);
 
     private DirectiveResolver() {
-
-
         try {
-
             handlers.put("start", getClass().getMethod("executeStart", String.class));
             handlers.put("base", getClass().getMethod("executeBase", String.class));
             handlers.put("nobase", getClass().getMethod("executeNoBase"));
@@ -38,7 +35,6 @@ public class DirectiveResolver {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-
     }
 
     public boolean isPass1(String dir) {

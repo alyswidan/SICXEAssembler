@@ -44,7 +44,6 @@ public class Assembler {
         System.out.println("<<<<<<<<<<Starting The Assembler for a new Program>>>>>>>>>>>");
         init();
         SymTab.getInstance().clear();
-
         extRefs.clear();
         extDefs.clear();
         mRecords.clear();

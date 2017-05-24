@@ -90,7 +90,7 @@ public class Pass2 {
                 } else if (parsedLine.getObjectCode() != null && !parsedLine.getObjectCode().toString().equals("null"))/* if this is not a reserve*/ {
                     int len = parsedLine.getObjectCode().toString().length()/2;
                     if (parsedLine.getObjectCode().isFormat4() && parsedLine.getArgType() != Line.ArgType.IMMEDIATE) {
-                        Assembler.addMRecord(new MRecord());
+                        Assembler.addMRecord(new MRecord(parsedLine.getOperand()));
                     }
                     if (counter + len <= 30)//if it fits in record
                     {

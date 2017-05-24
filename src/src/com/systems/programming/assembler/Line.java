@@ -94,7 +94,6 @@ public class Line {
                 if (tokens.length == 2) setComment("." + tokens[1]);
             }
         }
-
         return comment;
     }
 
@@ -194,11 +193,13 @@ public class Line {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        System.out.println("The mneomonic ddjdjdj is kaza " + getMnemonic());
+        System.out.println("The operand is " + getOperand());
         Arrays.asList(getLabel(),
                 getMnemonic(),
                 getOperand(),
                 getComment()).
-                forEach(token -> builder.append(String.format("%15s", token == null ? "" : token)));
+                forEach(token -> builder.append(String.format("%18s", token == null ? "" : token)));
         return builder.toString();
     }
 

@@ -44,12 +44,11 @@ public class Pass1 {
                     if (parsedLine.isAssemblerExecutable())
                         parsedLine.execute();
 
-                    if (parsedLine.getLabel() != null && !parsedLine.isEqu() ) {
+                    if (parsedLine.getLabel() != null && !parsedLine.isEqu()
+                            && (!parsedLine.isCSECT() && sourceReader.getLineNumber()!=Assembler.getCurrStart())) {
+                        System.out.println("entered in mneeijjeoix " + parsedLine.getMnemonic());
                         SymTab.getInstance().putFull(parsedLine.getLabel(), Assembler.getLocationCounter(), SymTab.Type.RELATIVE, Assembler.getProgName());
                     }
-
-                    //System.out.println(">>>>>>>>>>>>>>>>>>>>..... " + parsedLine.getMnemonic());
-                    //System.out.println("heeeeeeeeeeeeeeeeeeeeeyyyyyyyyyyyyyyyy " + parsedLine.isCSECT());
 
                     if (parsedLine.isComment()) intermediateFileWrite.println(parsedLine.getComment());
 

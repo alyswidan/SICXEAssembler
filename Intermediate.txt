@@ -1,61 +1,28 @@
-0000           COPY          START              0               
-0000                        EXTDEFBUFFER,BUFFEND,LENGTH               
-0000                        EXTREF    RDREC,WRREC               
-0000          FIRST            STL         RETADR               
-0003          CLOOP          +JSUB          RDREC               
-0007                           LDA         LENGTH               
-000A                          COMP             #0               
-000D                           JEQ         ENDFIL               
-0010                         +JSUB          WRREC               
-0014                             J          CLOOP               
-0017         ENDFIL            LDA        =C'EOF'               
-001A                           STA         BUFFER               
-001D                           LDA             #3               
-0020                           STA         LENGTH               
-0023                         +JSUB          WRREC               
-0027                             J        @RETADR               
-002A         RETADR           RESW              1               
-002D         LENGTH           RESW              1               
-.LTORG
-0030         BUFFER           RESB           4096               
-1030        BUFFEND            EQU           4144               
-MAXLEN   EQU     BUFFEND-BUFFER
-**Error^^:InvalidExpressionException
-.
-.READRECORDINTOBUFFER
-.
-RDREC    CSECT
+0000             PROG1             START              0000                  
+0000                              EXTDEF             INDEV                  
+0000                                 LDX                #0                  
+0003                                 LDT               #10                  
+0006             RLOOP                TD             INDEV                  
+0009                                 JEQ             RLOOP                  
+000C                                  RD             INDEV                  
+000F                                STCH          RECORD,X                  
+0012                                TIXR                 T                  
+0014                                 JLT             RLOOP                  
+0017             INDEV              BYTE             X'F1'                  
+0018            RECORD              RESB               100                  
+PROG2    CSCET
+**Error^^:UnExpectedTokenException
+007C                              EXTREF             INDEV                  
+007C                                 LDX                #0                  
+007F                                 LDT               #10                  
+RLOOP    TD     INDEV
 **Error^^:DuplicateLabelException
-1030                        EXTREFBUFFER,LENGTH,BUFFEND               
-1030                         CLEAR              X               
-1032                         CLEAR              A               
-1034                         CLEAR              S               
-1036                           LDT         MAXLEN               
-1039          RLOOP             TD          INPUT               
-103C                           JEQ          RLOOP               
-103F                            RD          INPUT               
-1042                         COMPR            A,S               
-1044                           JEQ           EXIT               
-1047                         +STCH       BUFFER,X               
-104B                          TIXR              T               
-104D                           JLT          RLOOP               
-1050           EXIT           +STX         LENGTH               
-1054                          RSUB                              
-1057          INPUT           BYTE          X'F1'               
-1058         MAXLEN           WORD           4096               
+0082                                 JEQ             RLOOP                  
+0085                                  WD             INDEV                  
+0088                               +STCH          RECORD,X                  
+008C                                TIXR                 T                  
+008E                                 JLT             RLOOP                  
+0091                                 END             PROG1                  
 .
-.SUBROUTINETOWRITERECORDFROMBUFFER
 .
-WRREC    CSECT
-**Error^^:DuplicateLabelException
-105B                        EXTREF  LENGTH,BUFFER               
-105B                         CLEAR              X               
-105D                          +LDT         LENGTH               
-1061          WLOOP             TD         =X'05'               
-1064                           JEQ          WLOOP               
-1067                         +LDCH       BUFFER,X               
-106B                            WD         =X'05'               
-106E                          TIXR              T               
-1070                           JLT          WLOOP               
-1073                          RSUB                              
-1076                           END          FIRST               
+.

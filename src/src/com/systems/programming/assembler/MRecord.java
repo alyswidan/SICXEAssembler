@@ -17,13 +17,13 @@ public class MRecord {
         this.length = length;
         this.relativeTo = relativeTo;
     }
-    public MRecord()
+    public MRecord(String label)
     {
 
         this.address = Assembler.getLocationCounter()+1;
         this.sign = '+';
         this.length = 5;
-        this.relativeTo = Assembler.getProgName();
+        this.relativeTo = SymTab.getInstance().getCSect(label).equals(Assembler.getProgName())?Assembler.getProgName():label;
     }
 
     public MRecord(char sign, int length, String relativeTo) {
