@@ -27,9 +27,7 @@ public class Line {
     }
 
     public boolean isCSECT() {
-        if(mnemonic!=null)
-            System.out.println(mnemonic+"++++++++++"+mnemonic.equalsIgnoreCase("csect"));
-        return mnemonic!=null && mnemonic.equalsIgnoreCase("csect");
+            return mnemonic!=null && mnemonic.equalsIgnoreCase("csect");
     }
 
     public enum ArgType {IMMEDIATE,INDIRECT,DIRECT};
@@ -199,7 +197,7 @@ public class Line {
                 getMnemonic(),
                 getOperand(),
                 getComment()).
-                forEach(token -> builder.append(String.format("%18s", token == null ? "" : token)));
+                forEach(token -> builder.append(String.format("%25s", token == null ? "" : token)));
         return builder.toString();
     }
 

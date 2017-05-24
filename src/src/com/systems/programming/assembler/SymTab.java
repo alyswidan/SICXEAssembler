@@ -1,5 +1,6 @@
 package com.systems.programming.assembler;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import com.systems.programming.assembler.Exceptions.DuplicateLabelException;
 
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public class SymTab {
 
     public void clear() {
         table.clear();
-        System.out.println("------>table size "+table.size());
+        //System.out.println("------>table size "+table.size());
     }
 
     public enum Type {RELATIVE, ABSOLUTE}
@@ -34,7 +35,7 @@ public class SymTab {
     }
 
     public Integer get(String label) {
-        System.out.println("get label = " + label);
+        //System.out.println("get label = " + label);
 
         return table.get(label).getVal();
     }
@@ -44,10 +45,13 @@ public class SymTab {
     }
 
     public String getCSect(String label) {
+        //System.out.println("label = " + label);
+        //System.out.println("tttt = " + table.get(label));
         return table.get(label).getcSect();
     }
 
     public Integer put(String label, Integer address) throws DuplicateLabelException {
+        System.out.println("adding label = " + label);
         if (containsKey(label)) throw new DuplicateLabelException();
         Attributes attr = new Attributes(address);
         attr.setType(Type.ABSOLUTE);

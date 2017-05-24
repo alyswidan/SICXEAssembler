@@ -54,7 +54,6 @@ public class DeepParsingTest {
             Line parsedLine = new Line(l.trim());
             if (parsedLine.isEmpty() || parsedLine.isComment()) continue;
             List<String> tokens = parsedLine.getTokens();
-            System.out.println("tokens = " + tokens);
             OCode = tokens.get(tokens.size() - 2);
             String candidateLabel = tokens.get(0);
             if (!opTable.isInstruction(candidateLabel) && !resolver.isDirective(candidateLabel)) {
@@ -70,7 +69,7 @@ public class DeepParsingTest {
             parsedLine.setLine(tokens.stream().collect(Collectors.joining(" ")));
             if(parsedLine.hasOpCode())
             {
-                System.out.println(parsedLine.getLine()+" @ "+parsedLine.getAddress());
+               // System.out.println(parsedLine.getLine()+" @ "+parsedLine.getAddress());
                 a.add(new Object[]{parsedLine,OCode.toLowerCase()});
             }
         }
@@ -80,12 +79,12 @@ public class DeepParsingTest {
 
     @Test
     public void test() throws AssemblerException {
-        System.out.println(line.getLine()+" @ "+line.getAddress());
+        //System.out.println(line.getLine()+" @ "+line.getAddress());
         Assembler.setLocationCounter(line.getAddress());
         Line o = parser.parse(line.getLine());
-        System.out.println("flags = "+Integer.toBinaryString(o.getObjectCode().getFlags()));
-        System.out.printf("disp = %x\n",o.getObjectCode().getArg1());
-        System.out.printf("arg2 = %d\n",o.getObjectCode().getArg2());
+        //System.out.println("flags = "+Integer.toBinaryString(o.getObjectCode().getFlags()));
+        //System.out.printf("disp = %x\n",o.getObjectCode().getArg1());
+        //System.out.printf("arg2 = %d\n",o.getObjectCode().getArg2());
 //        System.out.printf("opcode = %x\n",Integer.parseInt(o.getObjectCode().getOpcode()));
 
 

@@ -35,6 +35,7 @@ public class OpTable {
 
     public int getOpcode(String mnemonic) {
         if (mnemonic.charAt(0) == '+') mnemonic = mnemonic.substring(1);
+        mnemonic = mnemonic.toUpperCase();
         return table.get(mnemonic).opcode;
     }
 
@@ -48,7 +49,7 @@ public class OpTable {
 
     public int getOperandCount(String mnemonic) {
         if (mnemonic.charAt(0) == '+') mnemonic = mnemonic.substring(1);
-
+        mnemonic = mnemonic.toUpperCase();
         return table.get(mnemonic).operandCount;
     }
 

@@ -23,6 +23,7 @@ public class SingleArgNode extends ParseNode {
     }
 
     private String getCleanArg(String arg) {
+        arg = arg.trim();
         String x = arg;
         if (arg.contains("#"))
             x = arg.replace("#", "");
@@ -45,9 +46,10 @@ public class SingleArgNode extends ParseNode {
         try {
             disp = Integer.parseInt(clean);
         } catch (NumberFormatException ex) {
-            if (!SymTab.getInstance().containsKey(clean))
+            if (!SymTab.getInstance().containsKey(clean)) {
+                //System.out.println("undefined "+clean);
                 throw new UndefinedLabelException();
-            else if(getState("format").equalsIgnoreCase("3") &&
+            } else if(getState("format").equalsIgnoreCase("3") &&
                     SymTab.getInstance().getCSect(clean).equalsIgnoreCase("other"))
                     throw new ExternalReferanceWithFormat3Exeption();
 
@@ -60,15 +62,15 @@ public class SingleArgNode extends ParseNode {
         LineParser parser = LineParser.getInstance();
         if (getState("format").equalsIgnoreCase("4"))
         {
-            System.out.printf("-> current pc is  %X\n",(Assembler.getLocationCounter() + Integer.parseInt(getState("format"))));
+            //System.out.printf("-> current pc is  %X\n",(Assembler.getLocationCounter() + Integer.parseInt(getState("format"))));
             return arg;
         }
 
 
-        System.out.println("is base activated = "+parser.isBaseActivated());
+        //System.out.println("is base activated = "+parser.isBaseActivated());
         //pc relative?
         int computed = arg - (Assembler.getLocationCounter() + Integer.parseInt(getState("format")));
-        System.out.println("pc->computed = " + computed);
+        //System.out.println("pc->computed = " + computed);
         if (-2048 < computed && computed < 2047) {
             setFlags(getFlags() | (1 << 1));
 
@@ -78,7 +80,7 @@ public class SingleArgNode extends ParseNode {
         else if (parser.isBaseActivated()) {
 
             computed = arg - parser.getBase();
-            System.out.println("base->computed = " + computed);
+           // System.out.println("base->computed = " + computed);
             if (computed < 4096) {
                 setFlags(getFlags() | (1 << 2));
                 return computed;

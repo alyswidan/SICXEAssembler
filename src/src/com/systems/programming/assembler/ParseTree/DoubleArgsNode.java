@@ -25,14 +25,14 @@ public class DoubleArgsNode extends ParseNode {
             } else throw new UnknownRegisterException();
 
             if (regs.length == 2) {
-                System.out.println(getState("instruction"));
+               // System.out.println(getState("instruction"));
                 if (getState("instruction").equalsIgnoreCase("SHIFTL")||
                         getState("instruction").equalsIgnoreCase("SHIFTR")    ) {
 
                     super.addState("arg2", String.valueOf(Integer.parseInt(regs[1])));
                 }
                 else if (isReg.test(regs[1])) {
-                    System.out.println(getState("instruction"));
+                    //System.out.println(getState("instruction"));
                     super.addState("arg2", String.valueOf(savedRegisters.getValue(regs[1])));
                 } else throw new UnknownRegisterException();
             }

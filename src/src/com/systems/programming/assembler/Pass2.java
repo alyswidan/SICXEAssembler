@@ -24,13 +24,13 @@ public class Pass2 {
             LineParser.getInstance().setMode(LineParser.Mode.DEEP);
             String line;
             List<Line> currentTRecord = new ArrayList<>();
-            System.out.println("<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>> ");
+            //System.out.println("<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>> ");
             for (int i = 0; i < Assembler.getCurrStart(); i++) {
                 sourceReader.readLine();
             }
 
             while ((line = sourceReader.readLine()) != null) {
-                System.out.println("line = " + line);
+               // System.out.println("line = " + line);
                 String address = line.split("\\s+")[0];
                 line = Arrays.stream(line.split("\\s+")).skip(1).collect(Collectors.joining("  "));
                 int xx = Assembler.getLocationCounter();
@@ -64,7 +64,7 @@ public class Pass2 {
                     if (parsedLine.isStart())//is it a start
                         HTMEWriter.print(createHRecord(parsedLine.getLabel(), parsedLine.getOperand()));
 
-                    System.out.println("<<<<<<<<<<<<<==============>>>>>>>>>. " + parsedLine.isCSECT());
+                   // System.out.println("<<<<<<<<<<<<<==============>>>>>>>>>. " + parsedLine.isCSECT());
 
                     if(parsedLine.isCSECT()){
                         //System.out.println("hahahhahahahahhahahha parsedLine = " + parsedLine);

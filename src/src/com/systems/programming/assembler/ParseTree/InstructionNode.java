@@ -76,7 +76,7 @@ public class InstructionNode extends ParseNode {
     public void addState(String key, String val) throws AssemblerException {
         if (key.equalsIgnoreCase("instruction")) {
             super.addState(key, val);
-            System.out.println(val);
+            //System.out.println(val);
             addState("opcode", String.valueOf(OpTable.getInstance().getOpcode(val)));
         } else {
             super.addState(key, val);

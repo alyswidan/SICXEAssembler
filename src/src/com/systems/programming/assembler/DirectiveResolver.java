@@ -136,7 +136,7 @@ public class DirectiveResolver {
                 charMatcher.group(1).chars().mapToObj(i -> String.format("%02X", i)).forEach(builder::append);
                 objectCode.setOpcode(builder.toString());
             }
-            System.out.println("operand for byte is " + objectCode.getOpcode().length() / 2);
+            //System.out.println("operand for byte is " + objectCode.getOpcode().length() / 2);
 
             objectCode.setLength(objectCode.getOpcode().length() / 2);
         }
@@ -204,11 +204,10 @@ public class DirectiveResolver {
         SymTab symTab = SymTab.getInstance();
         String prev = null;
         List<String> tokens = tokenizeExpression(operand);
-        System.out.println("the tokenized expression "+tokens);
+        //System.out.println("the tokenized expression "+tokens);
         for (String curr : tokens) {
             char sign = prev==null||prev.equals("+")?'+':'-';
             if (curr.matches("[a-zA-Z]+")) {
-                System.out.println("a match in expression ->"+curr);
                 recs.add(new MRecord(sign, 6,
                         symTab.getCSect(curr).equals(Assembler.getProgName()) ? curr
                                 : Assembler.getProgName()));
@@ -236,7 +235,7 @@ public class DirectiveResolver {
                 freq[symTab.getCSect(curr).equals(Assembler.getProgName()) ? 0 : 1]--;
             prev = curr;
         }
-        System.out.println(operand + "->" + freq[0] + "," + freq[1]);
+        //System.out.println(operand + "->" + freq[0] + "," + freq[1]);
         if (freq[0] != 1 && freq[0] != 0 || freq[1] != 1 && freq[1] != 0)
             throw new InvalidExpressionException();
         if (freq[0] == freq[1] && freq[0] == 0)
@@ -284,7 +283,7 @@ public class DirectiveResolver {
             SymTab.getInstance().putFull(label, Assembler.getLocationCounter(), type, Assembler.getProgName());
         else
             SymTab.getInstance().putFull(label, evalExpression(operand), type, Assembler.getProgName());
-        System.out.println(label + "->type = " + type);
+        //System.out.println(label + "->type = " + type);
     }
 
     public void executeExtDef(String operands) {

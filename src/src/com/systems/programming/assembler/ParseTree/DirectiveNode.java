@@ -18,7 +18,7 @@ public class DirectiveNode extends ParseNode {
 
         DirectiveResolver resolver = DirectiveResolver.getInstance();
         ParseNode next;
-        System.out.println("the state directive is "+getState("directive"));
+        //System.out.println("the state directive is "+getState("directive"));
         if(getState("directive").equalsIgnoreCase("csect"))
             next = new TerminalNode();
         else if(DirectiveResolver.getInstance().isPass1(getState("directive")))

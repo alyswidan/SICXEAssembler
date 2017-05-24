@@ -37,7 +37,7 @@ public class LineParser {
 
     public Line parse(String line) throws AssemblerException {
 
-        System.out.println("line = " + line);
+        //System.out.println("line = " + line);
         Line parsedLine = new Line(line);
         if (parsedLine.isEmpty() || parsedLine.isComment()) return parsedLine;
 
@@ -45,17 +45,17 @@ public class LineParser {
         path.clear();
         List<String> tokenList = parsedLine.getTokens();
         //start the journey to c1lassify the line components
-        System.out.println(tokenList);
+        //System.out.println(tokenList);
         node = new RootNode();
         node = getNextNode(node, tokenList.get(0));
-        System.out.println("pushing "+tokenList.get(0));
+        //System.out.println("pushing "+tokenList.get(0));
 
         //let the line travel through the tree
         for (int i = 1; i < tokenList.size(); i++) {
 
             node = getNextNode(node, tokenList.get(i));
         }
-        System.out.println("mode = " + mode);
+        //System.out.println("mode = " + mode);
         if (mode.equals(Mode.SHALLOW))
             return shallowParse(parsedLine);
         else
@@ -108,10 +108,10 @@ public class LineParser {
 
         DirectiveResolver dr = DirectiveResolver.getInstance();
         //traverse the path and get components into corresponding variables
-        System.out.println("the shallow parser");
+        //System.out.println("the shallow parser");
         path.forEach((ParseNode n) ->
         {
-            System.out.println("n = " + n);
+            //System.out.println("n = " + n);
             if (n instanceof LabelNode) parsedLine.setLabel(n.getState("label"));
             if (n instanceof InstructionNode) parsedLine.setMnemonic(n.getState("instruction"));
             if (n instanceof DirectiveNode) parsedLine.setMnemonic(n.getState("directive"));
@@ -128,9 +128,9 @@ public class LineParser {
                 parsedLine.setOperand(String.valueOf(Assembler.getLocationCounter()));
         }
 
-        if (dr.isDirective(parsedLine.getMnemonic()) && dr.isExpression(parsedLine.getOperand())) {
+        if (dr.isDirective(parsedLine.getMnemonic()) && !parsedLine.isEqu() && dr.isExpression(parsedLine.getOperand())) {
             List<MRecord>recs = dr.getMrecords(parsedLine.getOperand());
-            System.out.println(parsedLine.getMnemonic()+" -> recs = " + recs);
+            //System.out.println(parsedLine.getMnemonic()+" -> recs = " + recs);
             recs.forEach(mRecord -> mRecord.setAddress(Assembler.getLocationCounter()));
             Assembler.appendMRecords(recs);
 
@@ -152,7 +152,7 @@ public class LineParser {
 
     private ParseNode getNextNode(ParseNode current, String token) throws AssemblerException {
         ParseNode node;
-        System.out.println("pushing "+token);
+        //System.out.println("pushing "+token);
         node = current.nextNode(token);
         path.add(node);
         return node;
@@ -171,7 +171,7 @@ public class LineParser {
     }
 
     public void setBase(int base) {
-        System.out.println("activating base");
+        //System.out.println("activating base");
         this.base = base;
     }
 
