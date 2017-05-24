@@ -10,5 +10,4 @@
 0014                                               JLT                    RLOOP                         
 0017                    INDEV                     BYTE                    X'F1'                         
 0018                   RECORD                     RESB                      100                         
-.
 0000                    PROG2                    CSECT                                                  

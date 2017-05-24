@@ -95,7 +95,8 @@ public class DirectiveResolver {
     }
 
     private void executeEnd(String operand) {
-        Assembler.setProgramLength(Assembler.getLocationCounter() - Integer.parseInt(startAddress, 16));
+        Assembler.setProglength(Assembler.getLocationCounter());
+        //Assembler.setProgramLength(Assembler.getLocationCounter() - Integer.parseInt(startAddress, 16));
     }
 
     public static String getStartAddress() {

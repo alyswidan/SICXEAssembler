@@ -6,11 +6,10 @@ RLOOP    TD     INDEV
          JEQ    RLOOP
          RD     INDEV 
          STCH   RECORD,X
-         TIXR   T
+         TIXR   T 
          JLT    RLOOP 
 INDEV    BYTE   X'F1' 
 RECORD   RESB   100
-
 PROG2    CSECT
          EXTREF INDEV         
          LDX    #0
@@ -21,4 +20,4 @@ RLOOP    TD     INDEV
          +STCH  RECORD,X
          TIXR   T 
          JLT    RLOOP 
-         END    0 
+         END    PROG1 
