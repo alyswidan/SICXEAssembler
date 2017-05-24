@@ -30,7 +30,7 @@ public class Pass2 {
             }
 
             while ((line = sourceReader.readLine()) != null) {
-               // System.out.println("line = " + line);
+               System.out.println("line = " + line);
                 String address = line.split("\\s+")[0];
                 line = Arrays.stream(line.split("\\s+")).skip(1).collect(Collectors.joining("  "));
                 int xx = Assembler.getLocationCounter();
