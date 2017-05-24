@@ -6,7 +6,7 @@ RLOOP    TD     INDEV
          JEQ    RLOOP
          RD     INDEV 
          STCH   RECORD,X
-         TIXR   T 
+         TIXR   T
          JLT    RLOOP 
 INDEV    BYTE   X'F1' 
 RECORD   RESB   100
