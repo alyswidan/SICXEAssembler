@@ -1,8 +1,19 @@
 ===================================================
 |    Symbol    |   address    |      Type    |     CSect|
 ====================================================
-|     RLOOP    |         6    |  RELATIVE    |     PROG1|
-|    RECORD    |        18    |  RELATIVE    |     PROG1|
-|     INDEV    |        17    |  RELATIVE    |     PROG1|
-|     PROG1    |         0    |  RELATIVE    |     PROG1|
+|     INPUT    |      1057    |  RELATIVE    |      COPY|
+|     WRREC    |         0    |  RELATIVE    |     other|
+|    ENDFIL    |        17    |  RELATIVE    |      COPY|
+|    LENGTH    |        2D    |  RELATIVE    |      COPY|
+|      COPY    |         0    |  RELATIVE    |      COPY|
+|   BUFFEND    |      1030    |  ABSOLUTE    |      COPY|
+|     FIRST    |         0    |  RELATIVE    |      COPY|
+|    RETADR    |        2A    |  RELATIVE    |      COPY|
+|    BUFFER    |        30    |  RELATIVE    |      COPY|
+|     RLOOP    |      1039    |  RELATIVE    |      COPY|
+|    MAXLEN    |      1058    |  RELATIVE    |      COPY|
+|     CLOOP    |         3    |  RELATIVE    |      COPY|
+|     WLOOP    |      1061    |  RELATIVE    |      COPY|
+|     RDREC    |         0    |  RELATIVE    |     other|
+|      EXIT    |      1050    |  RELATIVE    |      COPY|
 ====================================
